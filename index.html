@@ -1,0 +1,523 @@
+﻿<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <title>Crafto - The Multipurpose HTML5 Template</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="author" content="ThemeZaa">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <meta name="description" content="Elevate your online presence with Crafto - a modern, versatile, multipurpose Bootstrap 5 responsive HTML5, SCSS template using highly creative 52+ ready demos.">
+        <!-- favicon icon -->
+        <link rel="shortcut icon" href="images/favicon.png">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+        <!-- google fonts preconnect -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <!-- style sheets and font icons  -->
+        <link rel="stylesheet" href="css/vendors.min.css"/>
+        <link rel="stylesheet" href="css/icon.min.css"/>
+        <link rel="stylesheet" href="css/style.css"/>
+        <link rel="stylesheet" href="css/responsive.css"/>
+        <link rel="stylesheet" href="css/barber.css" />
+    </head>
+    <body data-mobile-nav-style="classic">
+        <!-- start header -->
+        <header>
+            <!-- start navigation -->
+            <nav class="navbar navbar-expand-lg center-logo disable-fixed d-none d-lg-flex" style="background-color: #00324F!important;height: 80px;">
+                <div class="container-fluid">
+                    <div class="col-auto col-lg-2 menu-logo">
+                        <a class="navbar-brand text-center" href="demo-barber.html">
+                            <img src="images/logo.png" data-at2x="images/logo.png" alt="" class="default-logo" style="width: 70%;">
+                            <img src="images/logo.png" data-at2x="images/logo.png" alt="" class="alt-logo">
+                            <img src="images/logo.png" data-at2x="images/logo.png" alt="" class="mobile-logo">
+                        </a>   
+                    </div>
+                    <div class="col-auto col-lg-8 menu-order">
+                        <button class="navbar-toggler float-end collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-label="Toggle navigation" aria-expanded="false">
+                            <span class="navbar-toggler-line bg-white"></span>
+                            <span class="navbar-toggler-line bg-white"></span>
+                            <span class="navbar-toggler-line bg-white"></span>
+                            <span class="navbar-toggler-line bg-white"></span>
+                        </button>
+                        <div class="navbar-collapse justify-content-between collapse" id="navbarNav" style="max-height: 626px;">  
+                            <ul class="navbar-nav navbar-left justify-content-start"> 
+                                <li class="nav-item"><a href="#about" class="nav-link inner-link">About</a></li>
+                                <li class="nav-item"><a href="#Follow_the_Fleet" class="nav-link inner-link">Follow the Fleet</a></li>
+                                <li class="nav-item"><a href="#FAQs" class="nav-link inner-link">FAQs</a></li> 
+                            </ul>
+                            <ul class="navbar-nav navbar-right justify-content-end">
+                                <li class="nav-item"><a href="#contact" class="nav-link inner-link">Contact Us</a></li> 
+                                <li class="nav-item dropdown d-flex align-items-center nav-link inner-link bg-dark-gray">
+                                    <button class="btn btn-lang-switcher d-flex align-items-center p-0" id="langDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: transparent; border: none; color: #fff; font-size: 18px; font-family: 'Open Sans', sans-serif; min-width: 0;">
+                                        <span class="fs-14" >EN</span>
+                                        <i class="bi bi-globe me-1" style="font-size: 18px;"></i>
+                                        <i class="bi bi-chevron-down" style="font-size: 18px;"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end lang-dropdown-menu border-0 mt-1 p-0" aria-labelledby="langDropdown">
+                                        <li><a class="dropdown-item text-white bg-transparent px-3 py-2" style="font-size: 16px;" href="#">EN</a></li>
+                                        <li><a class="dropdown-item text-white bg-transparent px-3 py-2" style="font-size: 16px;" href="#">AR</a></li>
+                                    </ul>
+                                </li>
+                            </ul> 
+                        </div>
+                    </div> 
+                    <div class="col-auto col-lg-2 text-start">
+                          
+                    </div>
+                </div>
+            </nav>
+            <!-- Mobile navbar -->
+            <nav class="navbar d-flex d-lg-none justify-content-between align-items-center px-3" style="background-color: #00324F; height: 80px;">
+                <button class="navbar-toggler border-0 bg-transparent p-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-label="Toggle navigation" aria-expanded="false">
+                    <span class="navbar-toggler-line bg-white" style="display:block;width:32px;height: 1px;"></span>
+                    <span class="navbar-toggler-line bg-white" style="display:block;width:32px;height: 1px;"></span>
+                    <span class="navbar-toggler-line bg-white" style="display:block;width:32px;height: 1px;"></span>
+                    <span class="navbar-toggler-line bg-white" style="display:block;width:32px;height: 1px;"></span>
+                </button>
+                <a class="navbar-brand mx-auto text-center" href="demo-barber.html">
+                    <img src="images/logo.png" alt="Yas Marina Rendezvous Logo" style="height:32px;">
+                </a>
+                <div class="dropdown">
+                    <button class="btn btn-lang-switcher d-flex align-items-center p-0 text-white" id="langDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false" style="background: transparent; border: none; font-size: 18px; min-width: 0;white-space: nowrap;">
+                        <span class="fs-14 me-1">EN</span>
+                        <i class="bi bi-globe" style="font-size: 22px;"></i>
+                        <i class="bi bi-chevron-down ms-1" style="font-size: 18px;"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end lang-dropdown-menu mt-1 p-0" aria-labelledby="langDropdownMobile">
+                        <li><a class="dropdown-item" href="#">EN</a></li>
+                        <li><a class="dropdown-item" href="#">AR</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- end header -->
+        <!-- start hero section -->
+        <section id="home" class="full-screen bg-dark-gray ipad-top-space-margin position-relative md-h-600px sm-h-500px" data-parallax-background-ratio="0.5" style="background-image: url('images/header.png')">
+            <div class="container h-100">
+                <div class="row align-items-end justify-content-center lg-hi-100 md-hi-50 sm-hi-25">
+                    <div class="col-lg-10 col-md-12 text-center pb-5" data-anime='{ "el": "childs", "translateY": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 300, "easing": "easeOutQuad" }'>
+                        <span class="fs-20 text-white text-uppercase text-shadow-double-large fw-200 d-block mb-25px sm-mb-15px">8 TO 11 DECEMBER 2025</span>
+                        <h1 class="fs-30 lg-fs-50 alt-font fw-100 text-white mb-0 text-shadow-double-large xs-fs-40 xs-ls-minus-1px">JOIN US FOR AN UNFORGETTABLE SAILING JOURNEY<br>FROM YAS MARINA TO SIR BANI YAS ISLAND</h1>
+                    </div> 
+                    <div class="text-center position-absolute left-0px bottom-50px md-bottom-30px w-100 animation-float">
+                        <a href="#about" class="d-block text-white section-link">
+                            <span class="fs-14 d-block mb-5px">Scroll to Discover</span>
+                            <i class="bi bi-chevron-down icon-very-medium lh-0px"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- end hero section -->
+        <!-- start section -->
+        <section id="about">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-5 col-lg-6 offset-xl-1 order-lg-2" data-anime='{ "el": "childs", "translateY": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 300, "easing": "easeOutQuad" }'>
+                        <h2 class="alt-font text-dark-gray fw-100 ls-minus-1px mb-20px">ABOUT</h2>
+                        <p class="text-dark-gray fw-100">Set sail on the Arabian Gulf's most exclusive yachting rally. Launching right after the energy of Race Weekend, Yas Marina Rendezvous departs from the iconic Yas Marina for an immersive voyage to the pristine shores of Sir Bani Yas Island. More than just a rally, it's a lifestyle experience, blending adventure, luxury, and cultural exploration.</p>
+                        <p class="text-dark-gray fw-100">Guests can sail at their own pace or join the friendly rally competition, creating the perfect balance between leisure and excitement. Along the way, enjoy bespoke hospitality, wildlife adventures, and an unforgettable Arabian BBQ under the stars.</p>
+                        <p class="mb-0 text-dark-gray fw-100 pb-5">Be part of a growing regional movement that champions coastal tourism and builds a community of passionate yacht lovers and adventurers.</p>
+                    </div>
+                    <div class="col-lg-6 md-mb-50px order-lg-1">
+                        <div class="row align-items-center">
+                            <div class="col-sm-6" data-anime='{ "el": "childs", "translateX": [-30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 300, "easing": "easeOutQuad" }'>
+                                <img src="images/about-1.png" class="border-radius-6px w-100 mb-30px" alt="">
+                                <img src="images/about-3.png" class="border-radius-6px w-100" alt="">
+                            </div>
+                            <div class="col-sm-6" data-anime='{ "translateX": [30, 0], "opacity": [0,1], "duration": 600, "delay": 200, "staggervalue": 300, "easing": "easeOutQuad" }'>
+                                <img src="images/about-2.png" class="border-radius-6px w-100" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- end section -->
+
+        <!-- start section -->
+        <section id="map" class="bg-dark-gray py-0">
+            <div class="container">
+                <div class="row align-items-center" data-anime='{ "el": "childs", "translateX": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 300, "easing": "easeOutQuad" }'>
+                    <div class="col-md-6">
+                        <h5 class="text-white lh-50 fw-400 fs-60 sm-pt-5 sm-mt-5 pb-3 mb-0">Follow the Fleet</h5>
+                        <span class="text-white lh-50 fs-30 fw-100">Track the Journey in<br>Real Time </span>
+                    </div>
+                    <div class="col-md-6 px-0">
+                        <img src="images/map.png" alt="" class="img-fluid image-map">
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </section>
+        <!-- end section -->
+
+        <!-- start section -->
+        <section id="FAQs" class="bg-white">
+            <style>
+                .accordion-style-01 .accordion-button {
+                    flex-direction: row;
+                    justify-content: left;                
+                }
+                .accordion-style-01 .accordion-button::after {
+                    order: -1;
+                    margin-left: 0;
+                    margin-right:30px;
+                }
+                
+            </style>
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h2 class="alt-font text-dark-gray fw-100 ls-minus-1px title">FREQUENTLY ASKED QUESTIONS</h2>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="accordion accordion-style-01" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        What is Yas Marina Rendezvous?
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body text-dark-gray ps-50px">
+                                        <p>Yas Marina Rendezvous is a premier, annual yachting rally starting from Yas Marina, blending sailing with curated lifestyle experiences across the GCC waters.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Who can participate?
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        What's included for participants?
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingfour">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefour" aria-expanded="false" aria-controls="collapsefour">
+                                        Is this a race?
+                                    </button>
+                                </h2>
+                                <div id="collapsefour" class="accordion-collapse collapse" aria-labelledby="headingfour" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingfive">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefive" aria-expanded="false" aria-controls="collapsefive">
+                                       Will the route change in future editions?
+                                    </button>
+                                </h2>
+                                <div id="collapsefive" class="accordion-collapse collapse" aria-labelledby="headingfive" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingsix">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesix" aria-expanded="false" aria-controls="collapsesix">
+                                       Can I partner or sponsor the event
+                                    </button>
+                                </h2>
+                                <div id="collapsesix" class="accordion-collapse collapse" aria-labelledby="headingsix" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- end section -->
+        
+        <!-- start contact section -->
+        <section id="contact-section" class="bg-dark-gray" style="display: flex; align-items: center;">
+           
+            <div class="container">
+                <div class="row justify-content-center align-items-center" >
+                    <!-- Contact info for mobile (visible only on mobile) -->
+                    <div class="d-block d-lg-none mb-4">
+                        <div class="contact-info-title fw-400 d-flex text-lg-start text-center justify-content-center">CONTACT US</div>
+                        <div class="contact-info-sub d-flex text-lg-start text-center justify-content-center">Have a question<br>or want to get involved?</div>
+                    </div>
+                    <div class="col-lg-6 mb-lg-0 mb-25px mb-lg-0 d-flex justify-content-center ">
+                        <form class="bg-white p-40px rounded-3 shadow-sm w-100 contact-form-custom " style="max-width: 400px;">
+                            <div class="mb-3">
+                                <label for="contactName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="contactName">
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="contactEmail">
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactEnquiry" class="form-label">Enquiry</label>
+                                <input type="text" class="form-control" id="contactEnquiry">
+                            </div>
+                            <div class="mb-3 form-text">
+                                By submitting this form, I agree to the
+                                <a href="#">Privacy Policy.</a>
+                            </div>
+                            <button type="submit" class="btn btn-submit w-100 bg-dark-gray fw-100">SUBMIT</button>
+                        </form>
+                    </div>
+                    <!-- Contact info for desktop (hidden on mobile) -->
+                    <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-lg-start align-items-center text-white contact-info">
+                        <div class="contact-info-title fw-400 d-flex text-lg-start text-center">CONTACT US</div>
+                        <div class="contact-info-sub d-flex text-lg-start text-center">Have a question<br>or want to get involved?</div>
+                        <div class="contact-info-list w-100">
+                            <div class="info-item"><i class="text-white-50 bi bi-geo-alt"></i> Yas Marina, Yas Island. Abu Dhabi, UAE</div>
+                            <div class="info-item"><i class="text-white-50 bi bi-envelope"></i> P.O. Box 144306</div>
+                            <div class="info-item"><i class="text-white-50 bi bi-envelope"></i> Samer.aladem@yasmarina.ae</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- end contact section -->
+        
+        <style>
+            .newsletter-bar {
+                background: #396D90;
+                padding: 110px 0 100px 0;
+            }
+            .newsletter-headline {
+                font-size: 72px;
+                color: #fff;
+                font-weight: 200;
+                letter-spacing: 0.18em;
+                line-height: 1.02;
+                text-transform: uppercase;
+                text-align: left;
+                margin-bottom: 0;
+                padding-left: 10px;
+                padding-right: 30px;
+            }
+            @media (max-width: 991px) {
+                .newsletter-headline {
+                    font-size: 38px;
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+            }
+            .newsletter-label {
+                color: #fff;
+                font-size: 26px;
+                font-weight: 300;
+                margin-bottom: 18px;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                text-align: left;
+                padding-left: 2px;
+            }
+            .newsletter-form {
+                display: flex;
+                width: 100%;
+                max-width: 600px;
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .newsletter-input {
+                flex: 1 1 auto;
+                min-width: 0;
+                height: 50px;
+                border: none;
+                border-radius: 0;
+                padding: 0 24px;
+                background: #fff;
+                color: #043852;
+                font-family: 'Open Sans', sans-serif;
+                font-weight: 300;
+                outline: none;
+            }
+            .newsletter-btn {
+                height: 50px;
+                color: #fff;
+                border: none;
+                font-family: 'Open Sans', sans-serif;
+                border-radius: 0;
+                font-weight: 400;
+                min-width: 200px;
+                padding: 0 32px;
+                margin-left: -2px;
+                transition: background 0.2s;
+            }
+            .newsletter-btn:hover {
+                background: #155a7a;
+            }
+            @media (max-width: 991px) {
+                .newsletter-form {
+                    flex-direction: column;
+                    max-width: 100%;
+                }
+                .newsletter-btn {
+                    margin-left: 0;
+                    margin-top: 12px;
+                    width: 100%;
+                    min-width: 0;
+                }
+            }
+        </style>
+        <!-- start newsletter bar -->
+        <section id="newsletter-bar" class="newsletter-bar">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 mb-lg-0">
+                        <div class="text-white fw-100 fs-40 lh-50">
+                            STAY UP TO DATE WITH THE<br>
+                            LATEST EVENTS & OFFERS
+                        </div>
+                    </div>
+                    <div class="col-lg-6 d-flex flex-column align-items-lg-end align-items-start lh-50">
+                        <label for="newsletter-input" class="text-white fw-100 w-100">JOIN OUR NEWSLETTER</label>
+                        <form class="newsletter-form" autocomplete="off">
+                            <input id="newsletter-input" type="email" class="newsletter-input me-2" placeholder="">
+                            <button class="newsletter-btn bg-dark-gray fw-100 " type="submit">SUBSCRIBE</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- end newsletter bar -->
+
+        <!-- start footer -->
+        <footer class="bg-dark-gray text-white" style=" padding-top: 70px; padding-bottom: 0;">
+            <div class="container">
+                <div class="row justify-content-center align-items-start">
+                    <div class="col-lg-3 mb-4 mb-lg-0 d-flex flex-column align-items-lg-start align-items-center">
+                        <img src="images/logo.png" alt="Yas Marina Rendezvous Logo" style="margin-bottom: 32px;display: block;width: 80%;">
+                        <div class="d-flex justify-content-between justify-content-lg-between gap-4 mb-2" style="width: 60%;">
+                            <a href="#" style="color: #8fb2c9;"><i class="fs-30 bi bi-facebook"></i></a>
+                            <a href="#" style="color: #8fb2c9;"><i class="fs-30 bi bi-instagram"></i></a>
+                            <a href="#" style="color: #8fb2c9;"><i class="fs-30 bi bi-twitter-x"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 mb-4 mb-lg-0 d-flex flex-column align-items-lg-start align-items-center sm-text-center">
+                        <div style="font-size: 22px; font-weight: 400; margin-bottom: 12px; letter-spacing: 0.5px;">CONTACT US</div>
+                        <div style="font-size: 17px; color: #b6c9d6; font-weight: 300; line-height: 1.8;">Yas Marina, Yas Island.<br>P.O. Box 144306<br>Abu Dhabi, UAE<br>Samer.aladem@yasmarina.ae</div>
+                    </div>
+                    <div class="col-lg-3 mb-4 mb-lg-0 d-flex flex-column align-items-lg-start align-items-center sm-text-center">
+                        <div style="font-size: 22px; font-weight: 400; margin-bottom: 12px; letter-spacing: 0.5px;">GETTING HERE</div>
+                        <div style="font-size: 17px; color: #b6c9d6; font-weight: 300; line-height: 1.8;" class="sm-text-center">Abu Dhabi Maritime's Water Taxi.<br>A shuttle service that runs between Yas Marina, Yas Bay and Raha Beach.<br>Ferries Services Schedule</div>
+                    </div>
+                    <div class="col-lg-3 sm-text-center">
+                        <div style="font-size: 22px; font-weight: 400; margin-bottom: 12px; letter-spacing: 0.5px;">SUBSCRIBE</div>
+                        <div class="w-100 sm-text-center">
+                            <input type="email" class="fw-300 px-0 text-dark-gray sm-text-center" placeholder="Your Email" style="flex:1 1 auto; height: 44px; border: none; border-bottom: 2px solid #4a7893; background: transparent;font-size: 17px;">
+                            <button class="mt-4 py-2 bg-white text-dark-gray fw-400 sm-text-center" style="border: none; font-size: 17px;border-radius: 6px; min-width: 120px;">SUBSCRIBE</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-4">
+                    <div class="col-12 d-flex flex-column align-items-center">
+                        <a href="#" style="color: #fff; font-size: 44px; text-decoration: none; margin-bottom: 2px;"><i class="bi bi-chevron-up"></i></a>
+                        <div style="font-size: 17px; color: #b6c9d6; font-weight: 300;">Scroll to top</div>
+                    </div>
+                </div>
+                <hr style="border-top: 0.5px solid #396D90; margin: 18px 0 10px 0; opacity: 0.4;">
+                <div class="row align-items-center pb-3">
+                    <!-- Mobile: Terms/Privacy first, then copyright -->
+                    <div class="col-12 d-block d-md-none text-center" style="font-size: 15px; font-weight: 300;">
+                        <a href="#" style="color: #b6c9d6; margin-right: 30px; text-decoration: none;">Terms of Use</a>
+                        <a href="#" style="color: #b6c9d6; text-decoration: none;">Privacy Statement</a>
+                    </div>
+                    <div class="col-12 d-block d-md-none text-center mt-2" style="font-size: 15px; color: #b6c9d6; font-weight: 300;">
+                        ©2013 - 2025 Yas Marina. All rights reserved.
+                    </div>
+                    <!-- Desktop: Copyright left, Terms/Privacy right -->
+                    <div class="col-md-6 d-none d-md-block text-md-start text-center" style="font-size: 15px; color: #b6c9d6; font-weight: 300;">©2013 - 2025 Yas Marina. All rights reserved.</div>
+                    <div class="col-md-6 d-none d-md-block text-md-end text-center mt-2 mt-md-0" style="font-size: 15px; font-weight: 300;">
+                        <a href="#" style="color: #b6c9d6; margin-right: 30px; text-decoration: none;">Terms of Use</a>
+                        <a href="#" style="color: #b6c9d6; text-decoration: none;">Privacy Statement</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- end footer -->
+        <!-- start scroll progress -->
+        <div class="scroll-progress d-none d-xxl-block">
+            <a href="#" class="scroll-top" aria-label="scroll">
+                <span class="scroll-text">Scroll</span><span class="scroll-line"><span class="scroll-point"></span></span>
+            </a>
+        </div>
+        <!-- end scroll progress -->
+        <!-- javascript libraries -->
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/vendors.min.js"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCA56KqSJ11nQUw_tXgXyNMiPmQeM7EaSA&callback=initMap"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        <style>
+            .btn-lang-switcher, .btn-lang-switcher:focus, .btn-lang-switcher:active {
+                color: #fff !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                min-width: 0 !important;
+            }
+            .btn-lang-switcher .bi {
+                vertical-align: middle;
+            }
+            .lang-dropdown-menu {
+                background: #181e22 !important;
+                min-width: 70px;
+                width: auto;
+            }
+            .lang-dropdown-menu .dropdown-item {
+                color: #fff !important;
+                background: transparent !important;
+                text-align: left;
+                font-size: 16px;
+                border: none;
+                min-width: 0;
+            }
+            .lang-dropdown-menu .dropdown-item:active, .lang-dropdown-menu .dropdown-item:focus, .lang-dropdown-menu .dropdown-item:hover {
+                background: #222 !important;
+                color: #fff !important;
+            }
+        </style>
+        <!-- Offcanvas mobile menu -->
+        <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel" style="background-color: #00324F; color: #fff;">
+            <div class="offcanvas-header border-bottom">
+                <h5 class="offcanvas-title" id="mobileMenuLabel">
+                    <img src="images/logo.png" alt="Yas Marina Rendezvous Logo" style="height:28px;">
+                </h5>
+                <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a href="#about" class="nav-link text-white">About</a></li>
+                    <li class="nav-item"><a href="#map" class="nav-link text-white">Map</a></li>
+                    <li class="nav-item"><a href="#FAQs" class="nav-link text-white">FAQs</a></li>
+                    <li class="nav-item"><a href="#contact-section" class="nav-link text-white">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
