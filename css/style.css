@@ -28031,3 +28031,35 @@ footer .footer-navbar .nav-item:last-child a {
 #contact-section .contact-info {
     text-align: left;
 }
+
+/* أنماط رسائل النجاح والخطأ */
+.form-results {
+    padding: 15px;
+    border-radius: 7px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    text-align: center;
+}
+
+.form-results.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.form-results.alert-danger {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+/* أنماط الحقول غير الصحيحة */
+.is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.is-valid {
+    border-color: #28a745 !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+}

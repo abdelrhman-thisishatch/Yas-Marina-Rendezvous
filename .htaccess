@@ -1,0 +1,136 @@
+# ملف .htaccess لموقع Yas Marina Rendezvous
+# تحسينات الأمان والتحكم في الوصول
+
+# منع عرض محتويات المجلدات
+Options -Indexes
+
+# منع الوصول لملفات معينة
+<Files "*.log">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.txt">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# منع الوصول لملفات النظام
+<Files ".htaccess">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.htpasswd">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# منع تنفيذ ملفات PHP في مجلدات معينة
+<Directory "images">
+    <Files "*.php">
+        Order allow,deny
+        Deny from all
+    </Files>
+</Directory>
+
+<Directory "css">
+    <Files "*.php">
+        Order allow,deny
+        Deny from all
+    </Files>
+</Directory>
+
+<Directory "js">
+    <Files "*.php">
+        Order allow,deny
+        Deny from all
+    </Files>
+</Directory>
+
+# منع الوصول لملفات النسخ الاحتياطية
+<FilesMatch "\.(bak|backup|old|tmp|temp)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# منع الوصول لملفات Git
+<Files ".gitignore">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# تحسين الأمان
+<IfModule mod_headers.c>
+    # منع تضمين الموقع في iframe
+    Header always append X-Frame-Options SAMEORIGIN
+    
+    # منع MIME sniffing
+    Header always set X-Content-Type-Options nosniff
+    
+    # منع XSS
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # إزالة معلومات الخادم
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# منع الوصول لملفات معينة حسب الامتداد
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|inc|bak)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# إعادة توجيه HTTPS (إذا كان متاحاً)
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     RewriteCond %{HTTPS} off
+#     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# </IfModule>
+
+# منع الوصول لملفات PHP في المجلد الجذر (إلا الملفات المسموح بها)
+<FilesMatch "^(?!send-email|send-email-enhanced|send-email-smtp).*\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# السماح بالوصول لملفات PHP المطلوبة
+<Files "send-email.php">
+    Order allow,deny
+    Allow from all
+</Files>
+
+<Files "send-email-enhanced.php">
+    Order allow,deny
+    Allow from all
+</Files>
+
+<Files "send-email-smtp.php">
+    Order allow,deny
+    Allow from all
+</Files>
+
+# منع الوصول لملفات التكوين
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# إعدادات PHP (إذا كان متاحاً)
+<IfModule mod_php.c>
+    php_flag display_errors off
+    php_flag log_errors on
+    php_value error_log logs/php_errors.log
+</IfModule>
+
+# منع الوصول لملفات الاختبار في الإنتاج
+<Files "test-form.html">
+    Order allow,deny
+    Deny from all
+</Files>

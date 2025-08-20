@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار نموذج إرسال البريد الإلكتروني</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .test-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-test {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-test:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+        }
+        .alert-danger {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="test-container">
+                    <h2 class="text-center mb-4 text-primary">اختبار نموذج إرسال البريد الإلكتروني</h2>
+                    <p class="text-center text-muted mb-4">هذه الصفحة لاختبار نظام إرسال البريد الإلكتروني</p>
+                    
+                    <form id="testForm" action="send-email-enhanced.php" method="POST">
+                        <div class="mb-3">
+                            <label for="contactName" class="form-label">الاسم</label>
+                            <input type="text" class="form-control required" id="contactName" name="contactName" placeholder="أدخل اسمك">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="contactEmail" class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control required" id="contactEmail" name="contactEmail" placeholder="أدخل بريدك الإلكتروني">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="contactEnquiry" class="form-label">الاستفسار</label>
+                            <textarea class="form-control required" id="contactEnquiry" name="contactEnquiry" rows="4" placeholder="اكتب استفسارك هنا"></textarea>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-test btn-lg submit">إرسال الرسالة</button>
+                        </div>
+                        
+                        <div class="form-results mt-3 d-none"></div>
+                    </form>
+                    
+                    <div class="mt-4 text-center">
+                        <a href="index.html" class="btn btn-outline-primary">العودة للصفحة الرئيسية</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // إضافة معالج خاص للصفحة
+        $(document).ready(function() {
+            // تحديث النموذج ليعمل مع textarea
+            $('#testForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                var formData = $(this).serialize();
+                var submitBtn = $(this).find('.submit');
+                var resultsDiv = $(this).find('.form-results');
+                
+                // إظهار حالة التحميل
+                submitBtn.prop('disabled', true).text('جاري الإرسال...');
+                
+                $.ajax({
+                    type: 'POST',
+                    url: 'send-email-enhanced.php',
+                    data: formData,
+                    dataType: 'json',
+                    success: function(response) {
+                        resultsDiv.removeClass('d-none alert-success alert-danger')
+                                 .addClass(response.alert)
+                                 .html(response.message)
+                                 .fadeIn('slow');
+                        
+                        // إعادة تعيين النموذج
+                        $('#testForm')[0].reset();
+                        
+                        // إخفاء الرسالة بعد 5 ثوان
+                        setTimeout(function() {
+                            resultsDiv.fadeOut('slow');
+                        }, 5000);
+                    },
+                    error: function() {
+                        resultsDiv.removeClass('d-none alert-success alert-danger')
+                                 .addClass('alert-danger')
+                                 .html('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.')
+                                 .fadeIn('slow');
+                    },
+                    complete: function() {
+                        submitBtn.prop('disabled', false).text('إرسال الرسالة');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
