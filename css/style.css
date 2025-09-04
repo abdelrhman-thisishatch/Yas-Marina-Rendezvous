@@ -28065,7 +28065,9 @@ footer .footer-navbar .nav-item:last-child a {
 }
 
 
-#header_sm{
-  display: flex;
-  align-items: center;
+@media(max-width:800px){
+  #header_sm{
+    display: flex;
+    align-items: center;
+  }
 }
