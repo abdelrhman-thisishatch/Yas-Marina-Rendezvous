@@ -28063,3 +28063,9 @@ footer .footer-navbar .nav-item:last-child a {
     border-color: #28a745 !important;
     box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
 }
+
+
+#header_sm{
+  display: flex;
+  align-items: center;
+}
