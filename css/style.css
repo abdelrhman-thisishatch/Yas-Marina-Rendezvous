@@ -28070,4 +28070,7 @@ footer .footer-navbar .nav-item:last-child a {
     display: flex;
     align-items: center;
   }
+  .header-divider{
+    top: 30px!important;
+  }
 }

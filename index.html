@@ -108,8 +108,35 @@
     <!-- end header -->
     <!-- start hero section -->
     <section id="home" class="full-screen bg-dark-gray ipad-top-space-margin position-relative md-h-600px sm-h-500px"
-        data-parallax-background-ratio="0.5" style="background-image: url('images/header.png')">
-        <div class="container h-100" id="header_sm">
+        data-parallax-background-ratio="0.5" style="background-image: url('images/header.png');    background-size: 100% 100% !important;">
+        
+        <!-- Internal divider frame with text on top -->
+        <div class="position-absolute w-100 header-divider" style="top: 110px; bottom: 0; padding: 30px; pointer-events: none;">
+            <!-- Top border with text in the middle -->
+            <div class="position-relative w-100 d-flex align-items-center justify-content-center" style="height: 1px;">
+                <div class="flex-grow-1" style="height: 1.3px; background-color: white; border-radius: 2px;"></div>
+                <div class="px-4 text-center pt-2" style="background-color: transparent; position: relative; top: -15px;">
+                    <img src="images/Yas-marina-logo.png" alt="Yas Marina Logo" style="width: 120px; height: auto;" data-no-retina="">
+                </div>
+                <div class="flex-grow-1" style="height: 1.3px; background-color: white; border-radius: 2px;"></div>
+            </div>
+            
+            <!-- Left border -->
+            <div class="position-absolute" style="left: 30px; top: 30px; bottom: 30px; width: 1.3px; background-color: white; border-radius: 2px;"></div>
+            
+            <!-- Right border -->
+            <div class="position-absolute" style="right: 30px; top: 30px; bottom: 30px; width: 1.3px; background-color: white; border-radius: 2px;"></div>
+            
+            <!-- Bottom border -->
+            <div class="position-absolute" style="left: 30px; right: 30px; bottom: 30px; height: 1.3px; background-color: white; border-radius: 2px;"></div>
+            
+            <!-- Centered logo image -->
+            <!-- <div class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: auto;">
+                <img src="images/Yas-marina-logo.png" alt="Yas Marina Logo Centered" style="width: 200px; height: auto;" data-no-retina="">
+            </div> -->
+        </div>
+        
+        <div class="container h-100 align-items-start align-items-md-end justify-content-center py-5" id="header_sm">
             <div class="row align-items-end justify-content-center lg-hi-100 md-hi-50 sm-hi-100">
                 <div class="col-lg-10 col-md-12 text-center"
                     data-anime='{ "el": "childs", "translateY": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 300, "easing": "easeOutQuad" }'>
@@ -117,30 +144,31 @@
                         class="fs-20 text-white text-uppercase text-shadow-double-large fw-200 d-block mb-25px sm-mb-15px">8
                         TO 11 DECEMBER 2025</span>
                     <h1
-                        class="fs-30 lg-fs-50 alt-font fw-100 text-white mb-0 text-shadow-double-large xs-fs-30 xs-ls-minus-1px">
+                        class="fs-30 lg-fs-50 alt-font fw-100 text-white mb-0 text-shadow-double-large xs-fs-15">
                         JOIN US FOR AN UNFORGETTABLE SAILING JOURNEY<br>FROM YAS MARINA TO SIR BANI YAS ISLAND</h1>
                     
                     <!-- Yas Marina element with lines on sides -->
-                    <div class="d-flex align-items-center justify-content-center my-4" style="width: 65%;margin: auto;">
+                    <!-- <div class="d-flex align-items-center justify-content-center my-4" style="width: 65%;margin: auto;"> -->
                         <!-- Left line -->
-                        <div style="width: 10%;height: 1px;background-color: white;opacity: 0.7;" class="flex-grow-1"></div>
+                        <!-- <div style="width: 10%;height: 1px;background-color: white;opacity: 0.7;" class="flex-grow-1"></div> -->
                         
                         <!-- Yas Marina element with Arabic text -->
-                        <div style="width: fit-content;">
+                        <!-- <div style="width: fit-content;">
                             <img src="images/Yas-marina-logo.png" alt="Arrow Down" class="px-5" style="width: 250px;" data-no-retina="">
-                        </div>
+                        </div> -->
                         
                         <!-- Right line -->
-                        <div class="flex-grow-1" style="width: 10%;height: 1px;background-color: white;opacity: 0.7;"></div>
-                    </div>
+                        <!-- <div class="flex-grow-1" style="width: 10%;height: 1px;background-color: white;opacity: 0.7;"></div> -->
+                    <!-- </div> -->
                     
                     
                         
                 </div>
                 <div class="text-center position-absolute left-0px bottom-50px md-bottom-30px w-100 animation-float">
                     <a href="#about" class="d-block text-white section-link">
-                        <!-- <span class="fs-14 d-block mb-5px">Scroll to Discover</span> -->
-                        <i class="bi bi-chevron-down icon-very-medium lh-0px"></i>
+                        <span class="fs-6 fw-100 d-block d-md-none">Scroll to Discover</span>
+                        <i class="bi bi-chevron-down lh-0px"></i>
+                        <!-- <i class="bi bi-chevron-down icon-very-medium lh-0px"></i> -->
                     </a>
                 </div>
             </div>
@@ -338,6 +366,79 @@
     </section>
     <!-- end section -->
 
+    <!-- start partners section -->
+    <section id="partners-section" class="bg-gradient-blue py-5">
+        <style>
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #396D90 0%, #2c5570 100%);
+            }
+            
+            .partners-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 40px;
+                padding: 40px 20px;
+            }
+            
+            .partner-logo {
+                height: 60px;
+                width: auto;
+                max-width: 180px;
+                object-fit: contain;
+                filter: brightness(0) invert(1);
+                opacity: 0.9;
+                transition: all 0.3s ease;
+            }
+            
+            .partner-logo:hover {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            
+            @media (max-width: 768px) {
+                .partners-container {
+                    gap: 30px;
+                    padding: 30px 15px;
+                }
+                
+                .partner-logo {
+                    height: 45px;
+                    max-width: 140px;
+                }
+            }
+            
+            @media (max-width: 576px) {
+                .partners-container {
+                    gap: 25px;
+                    padding: 25px 10px;
+                }
+                
+                .partner-logo {
+                    height: 35px;
+                    max-width: 120px;
+                }
+            }
+        </style>
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="partners-container">
+                        <img src="images/partners/par-1.png" alt="Partner 1" class="partner-logo" data-no-retina="">
+                        <img src="images/partners/par-2.png" alt="Partner 2" class="partner-logo" data-no-retina="">
+                        <img src="images/partners/par-3.png" alt="Partner 3" class="partner-logo" data-no-retina="">
+                        <img src="images/partners/par-4.png" alt="Partner 4" class="partner-logo" data-no-retina="">
+                        <img src="images/partners/par-5.png" alt="Partner 5" class="partner-logo" data-no-retina="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end partners section -->
+     
+
     <!-- start contact section -->
     <section id="contact-section" class="bg-dark-gray" style="display: flex; align-items: center;">
 
@@ -377,7 +478,7 @@
                 <!-- Contact info for desktop (hidden on mobile) -->
                 <div
                     class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-lg-start align-items-center text-white contact-info">
-                    <div class="contact-info-title fw-400 d-flex text-lg-start text-center">CONTACT US</div>
+                    <div class="contact-info-title fw-400 d-flex text-lg-start text-center text-uppercase lh-1">register your interest now</div>
                     <div class="contact-info-sub d-flex text-lg-start text-center">Have a question<br>or want to get
                         involved?</div>
                     <div class="contact-info-list w-100">
@@ -485,8 +586,8 @@
         }
     </style>
     <!-- start newsletter bar -->
-    <section id="newsletter-bar" class="newsletter-bar">
-        <div class="container">
+    <section id="newsletter-bar" class="newsletter-bar d-none">
+        <div class="container ">
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-lg-0">
                     <div class="text-white fw-100 fs-40 lh-50">
