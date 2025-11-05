@@ -69,15 +69,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // التحقق من رمز CSRF
-    if (!verifyCSRFToken($_POST['csrf_token'] ?? '')) {
-        $response = array(
-            'alert' => 'alert-danger',
-            'message' => 'رمز الأمان غير صحيح. يرجى تحديث الصفحة والمحاولة مرة أخرى.'
-        );
-        echo json_encode($response);
-        logEvent("CSRF token verification failed for IP: $clientIP");
-        exit;
-    }
+    // if (!verifyCSRFToken($_POST['csrf_token'] ?? '')) {
+    //     $response = array(
+    //         'alert' => 'alert-danger',
+    //         'message' => 'رمز الأمان غير صحيح. يرجى تحديث الصفحة والمحاولة مرة أخرى.'
+    //     );
+    //     echo json_encode($response);
+    //     logEvent("CSRF token verification failed for IP: $clientIP");
+    //     exit;
+    // }
     
     // الحصول على البيانات من النموذج
     $name = isset($_POST['contactName']) ? trim($_POST['contactName']) : '';
