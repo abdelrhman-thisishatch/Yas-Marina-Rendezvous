@@ -1,0 +1,148 @@
+=====================================================
+🔧 QUICK FIX - Email Not Sending Problem
+=====================================================
+
+ERROR MESSAGE:
+"An error occurred while sending the message. Please try again."
+
+=====================================================
+✅ SOLUTION - Follow These Steps:
+=====================================================
+
+STEP 1: Create Email Account in cPanel
+---------------------------------------
+1. Login to your cPanel
+2. Find "Email Accounts"
+3. Click "Create"
+4. Enter:
+   - Email: no-reply
+   - Domain: yasmarina.ae
+   - Password: [Choose a strong password]
+5. Click "Create Account"
+
+⚠️ THIS IS THE MOST IMPORTANT STEP! ⚠️
+
+
+STEP 2: Run Diagnostic Tool
+---------------------------------------
+1. Upload the updated files to your server
+2. Open your browser and go to:
+   https://yourwebsite.com/diagnose-email.php
+3. Click "🚀 Run Email Tests"
+4. Check the results:
+   - ✅ If any test passes = CHECK YOUR EMAIL!
+   - ❌ If all tests fail = Go to Step 3
+
+
+STEP 3: Check What Went Wrong
+---------------------------------------
+The diagnose-email.php will show you exactly what's wrong:
+
+- "mail() function: Not Available" 
+  → Contact your hosting support
+  
+- "Test 1, 2, 3 all failed"
+  → Your hosting doesn't support mail()
+  → Solution: Use SMTP (see below)
+
+
+STEP 4: Alternative Solution - Use SMTP
+---------------------------------------
+If mail() doesn't work, use SMTP instead:
+
+1. Download PHPMailer:
+   https://github.com/PHPMailer/PHPMailer/archive/refs/heads/master.zip
+
+2. Extract to folder "PHPMailer" on your server
+
+3. Edit index.html, change:
+   FROM: action="send-email-enhanced.php"
+   TO:   action="send-email-smtp.php"
+
+4. Update config.php with SMTP settings:
+   - SMTP_HOST: mail.yasmarina.ae (get from cPanel)
+   - SMTP_USERNAME: no-reply@yasmarina.ae
+   - SMTP_PASSWORD: [your email password]
+   - SMTP_PORT: 587
+
+
+=====================================================
+📋 CHECKLIST
+=====================================================
+
+Before testing:
+☐ Email account created in cPanel (no-reply@yasmarina.ae)
+☐ Files uploaded to server
+☐ diagnose-email.php is accessible
+
+After testing:
+☐ Email received successfully
+☐ Delete diagnose-email.php (IMPORTANT!)
+☐ Delete test-email.php (IMPORTANT!)
+
+
+=====================================================
+🎯 MOST COMMON SOLUTIONS
+=====================================================
+
+90% of cases: Create the email account in cPanel
+10% of cases: Use SMTP instead of mail()
+
+
+=====================================================
+📧 FILES UPDATED
+=====================================================
+
+✅ send-email-enhanced.php
+   - Now tries 3 different methods automatically
+   - Better error logging
+   - All messages in English
+
+✅ config.php
+   - All messages in English
+
+✅ send-email-smtp.php
+   - Fixed for shared hosting
+   - All messages in English
+
+✅ diagnose-email.php (NEW)
+   - Beautiful diagnostic tool
+   - Tests all email methods
+   - Shows exactly what's wrong
+
+✅ EMAIL-TROUBLESHOOTING-AR.md (NEW)
+   - Complete guide in Arabic
+   - Step-by-step solutions
+
+
+=====================================================
+⚠️ SECURITY WARNING
+=====================================================
+
+DELETE THESE FILES AFTER TESTING:
+- diagnose-email.php
+- test-email.php
+
+These files expose sensitive server information!
+
+
+=====================================================
+📞 STILL NOT WORKING?
+=====================================================
+
+1. Open email_log.txt
+2. Copy the last 10 lines
+3. Send me:
+   - Log content
+   - Screenshots from diagnose-email.php
+   - Your hosting provider name
+
+I'll help you fix it!
+
+
+=====================================================
+Last Updated: November 5, 2025
+Version: 2.0
+Status: ✅ Ready to use
+=====================================================
+

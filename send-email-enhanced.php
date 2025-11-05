@@ -121,7 +121,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // محاولة إرسال البريد الإلكتروني
     // استخدام بريد من نفس الدومين كـ From (مطلوب لـ shared hosting)
-    $fromEmail = "no-reply@yasmarina.ae"; // أو أي بريد من نفس الدومين
+    $fromEmail = "no-reply@yasmarina.ae";
+    
+    // محاولة 1: مع معامل -f
     $headers = "From: " . SITE_NAME . " <" . $fromEmail . ">\r\n";
     $headers .= "Reply-To: " . $email . "\r\n";
     $headers .= "MIME-Version: 1.0\r\n";
@@ -129,10 +131,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
     $headers .= "X-Priority: 3\r\n";
     
-    // إضافة معامل خامس لتجنب مشاكل shared hosting
-    $additionalParams = "-f" . $fromEmail;
+    $mailSent = false;
+    $errorDetails = "";
     
-    if (@mail(RECIPIENT_EMAIL, EMAIL_SUBJECT, $message, $headers, $additionalParams)) {
+    // Try with additional parameters first
+    try {
+        $additionalParams = "-f" . $fromEmail;
+        $mailSent = @mail(RECIPIENT_EMAIL, EMAIL_SUBJECT, $message, $headers, $additionalParams);
+        if (!$mailSent) {
+            $errorDetails = "Method 1 failed (with -f parameter). ";
+        }
+    } catch (Exception $e) {
+        $errorDetails = "Method 1 exception: " . $e->getMessage() . ". ";
+    }
+    
+    // محاولة 2: بدون معامل -f إذا فشلت المحاولة الأولى
+    if (!$mailSent) {
+        try {
+            $mailSent = @mail(RECIPIENT_EMAIL, EMAIL_SUBJECT, $message, $headers);
+            if (!$mailSent) {
+                $errorDetails .= "Method 2 failed (without -f parameter). ";
+            }
+        } catch (Exception $e) {
+            $errorDetails .= "Method 2 exception: " . $e->getMessage() . ". ";
+        }
+    }
+    
+    // محاولة 3: استخدام تنسيق بسيط جداً
+    if (!$mailSent) {
+        try {
+            $simpleHeaders = "From: " . $fromEmail . "\r\n";
+            $simpleHeaders .= "Reply-To: " . $email . "\r\n";
+            $simpleHeaders .= "Content-Type: text/plain; charset=UTF-8\r\n";
+            $mailSent = @mail(RECIPIENT_EMAIL, EMAIL_SUBJECT, $message, $simpleHeaders);
+            if (!$mailSent) {
+                $errorDetails .= "Method 3 failed (simple headers). ";
+            }
+        } catch (Exception $e) {
+            $errorDetails .= "Method 3 exception: " . $e->getMessage();
+        }
+    }
+    
+    if ($mailSent) {
         $response = array(
             'alert' => 'alert-success',
             'message' => SUCCESS_MESSAGE
@@ -143,7 +183,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'alert' => 'alert-danger',
             'message' => ERROR_MESSAGE
         );
-        logEvent("Email sending failed for IP: $clientIP, Email: $email");
+        logEvent("Email sending failed for IP: $clientIP, Email: $email. Details: " . $errorDetails);
+        
+        // Log additional debugging info
+        $lastError = error_get_last();
+        if ($lastError) {
+            logEvent("Last PHP Error: " . print_r($lastError, true));
+        }
     }
     
     // إرجاع الاستجابة كـ JSON
