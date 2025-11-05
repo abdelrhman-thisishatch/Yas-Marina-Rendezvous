@@ -57,12 +57,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Get form data
-    $name = isset($_POST['contactName']) ? trim($_POST['contactName']) : '';
+    $yachtName = isset($_POST['yachtName']) ? trim($_POST['yachtName']) : '';
+    $loaMeters = isset($_POST['loaMeters']) ? trim($_POST['loaMeters']) : '';
+    $ownerName = isset($_POST['ownerName']) ? trim($_POST['ownerName']) : '';
+    $mobileNumber = isset($_POST['mobileNumber']) ? trim($_POST['mobileNumber']) : '';
     $email = isset($_POST['contactEmail']) ? trim($_POST['contactEmail']) : '';
-    $enquiry = isset($_POST['contactEnquiry']) ? trim($_POST['contactEnquiry']) : '';
     
     // Validation
-    if (empty($name) || empty($email) || empty($enquiry)) {
+    if (empty($yachtName) || empty($loaMeters) || empty($ownerName) || empty($mobileNumber) || empty($email)) {
         echo json_encode([
             'alert' => 'alert-danger',
             'message' => VALIDATION_ERROR
@@ -81,20 +83,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Sanitize input
-    $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+    $yachtName = htmlspecialchars($yachtName, ENT_QUOTES, 'UTF-8');
+    $loaMeters = htmlspecialchars($loaMeters, ENT_QUOTES, 'UTF-8');
+    $ownerName = htmlspecialchars($ownerName, ENT_QUOTES, 'UTF-8');
+    $mobileNumber = htmlspecialchars($mobileNumber, ENT_QUOTES, 'UTF-8');
     $email = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
-    $enquiry = htmlspecialchars($enquiry, ENT_QUOTES, 'UTF-8');
     
     // Prepare message
-    $message = "New inquiry from " . SITE_NAME . " website:\n\n";
-    $message .= "Name: " . $name . "\n";
-    $message .= "Email: " . $email . "\n";
-    $message .= "Message: " . $enquiry . "\n\n";
-    $message .= "Sent at: " . date('Y-m-d H:i:s') . "\n";
+    $message = "New Yacht Registration from " . SITE_NAME . " website:\n\n";
+    $message .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    $message .= "YACHT DETAILS\n";
+    $message .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+    $message .= "Name of Yacht: " . $yachtName . "\n";
+    $message .= "LOA (meters): " . $loaMeters . " meters\n\n";
+    $message .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    $message .= "OWNER CONTACT DETAILS\n";
+    $message .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+    $message .= "Name of Owner: " . $ownerName . "\n";
+    $message .= "Mobile Number: " . $mobileNumber . "\n";
+    $message .= "Email Address: " . $email . "\n\n";
+    $message .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    $message .= "SUBMISSION INFO\n";
+    $message .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+    $message .= "Submitted at: " . date('Y-m-d H:i:s') . "\n";
     $message .= "IP Address: " . $clientIP . "\n";
     
     // Send email using PHPMailer
-    $response = sendWithPHPMailer(RECIPIENT_EMAIL, EMAIL_SUBJECT, $message, $name, $email);
+    $response = sendWithPHPMailer(RECIPIENT_EMAIL, EMAIL_SUBJECT, $message, $ownerName, $email);
     echo json_encode($response);
     
 } else {

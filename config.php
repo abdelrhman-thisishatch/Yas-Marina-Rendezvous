@@ -6,7 +6,7 @@
 define('RECIPIENT_EMAIL', 'abdelrhman.hassan510@gmail.com');
 
 // Email Subject
-define('EMAIL_SUBJECT', 'New Message from Yas Marina Rendezvous Website');
+define('EMAIL_SUBJECT', 'New Yacht Registration - Yas Marina Rendezvous');
 
 // SMTP Settings - Office 365 (Microsoft)
 define('SMTP_HOST', 'smtp.office365.com');
