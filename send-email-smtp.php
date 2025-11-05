@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($name) || empty($email) || empty($enquiry)) {
         $response = array(
             'alert' => 'alert-danger',
-            'message' => 'يرجى ملء جميع الحقول المطلوبة.'
+            'message' => 'Please fill in all required fields.'
         );
         echo json_encode($response);
         exit;
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $response = array(
             'alert' => 'alert-danger',
-            'message' => 'يرجى إدخال بريد إلكتروني صحيح.'
+            'message' => 'Please enter a valid email address.'
         );
         echo json_encode($response);
         exit;
@@ -44,19 +44,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $message .= "تم إرسال هذه الرسالة في: " . date('Y-m-d H:i:s') . "\n";
     
     // محاولة إرسال البريد الإلكتروني باستخدام وظيفة mail()
-    $headers = "From: " . $email . "\r\n";
+    $fromEmail = "no-reply@yasmarina.ae"; // استخدام بريد من نفس الدومين
+    $headers = "From: Yas Marina Rendezvous <" . $fromEmail . ">\r\n";
     $headers .= "Reply-To: " . $email . "\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-    $headers .= "X-Mailer: PHP/" . phpversion();
+    $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
     
-    if (mail($to_email, $subject, $message, $headers)) {
+    $additionalParams = "-f" . $fromEmail;
+    
+    if (@mail($to_email, $subject, $message, $headers, $additionalParams)) {
         $response = array(
             'alert' => 'alert-success',
-            'message' => 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.'
+            'message' => 'Your message has been sent successfully! We will contact you soon.'
         );
     } else {
         // إذا فشل mail()، حاول استخدام PHPMailer
-        $response = sendWithPHPMailer($to_email, $subject, $message, $name, $from_email);
+        $response = sendWithPHPMailer($to_email, $subject, $message, $name, $email);
     }
     
     // إرجاع الاستجابة كـ JSON
@@ -66,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // إذا لم يكن الطلب POST
     $response = array(
         'alert' => 'alert-danger',
-        'message' => 'طريقة طلب غير صحيحة.'
+        'message' => 'Invalid request method.'
     );
     echo json_encode($response);
 }
@@ -79,7 +83,7 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
     if (!file_exists('PHPMailer/PHPMailer.php')) {
         return array(
             'alert' => 'alert-danger',
-            'message' => 'حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة مرة أخرى.'
+            'message' => 'An error occurred while sending the message. Please try again.'
         );
     }
     
@@ -101,7 +105,7 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
         $mail->CharSet = 'UTF-8';
         
         // إعدادات المرسل والمستقبل
-        $mail->setFrom($from_email, $name);
+        $mail->setFrom('no-reply@yasmarina.ae', 'Yas Marina Rendezvous');
         $mail->addAddress($to_email);
         $mail->addReplyTo($from_email, $name);
         
@@ -114,13 +118,13 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
         
         return array(
             'alert' => 'alert-success',
-            'message' => 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.'
+            'message' => 'Your message has been sent successfully! We will contact you soon.'
         );
         
     } catch (Exception $e) {
         return array(
             'alert' => 'alert-danger',
-            'message' => 'حدث خطأ أثناء إرسال الرسالة: ' . $mail->ErrorInfo
+            'message' => 'An error occurred while sending the message: ' . $mail->ErrorInfo
         );
     }
 }

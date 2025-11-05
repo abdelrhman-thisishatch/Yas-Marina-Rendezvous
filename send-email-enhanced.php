@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!checkRateLimit($clientIP)) {
         $response = array(
             'alert' => 'alert-danger',
-            'message' => 'لقد تجاوزت الحد الأقصى للطلبات. يرجى المحاولة بعد ساعة.'
+            'message' => 'You have exceeded the maximum number of requests. Please try again after one hour.'
         );
         echo json_encode($response);
         logEvent("Rate limit exceeded for IP: $clientIP");
@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // if (!verifyCSRFToken($_POST['csrf_token'] ?? '')) {
     //     $response = array(
     //         'alert' => 'alert-danger',
-    //         'message' => 'رمز الأمان غير صحيح. يرجى تحديث الصفحة والمحاولة مرة أخرى.'
+    //         'message' => 'Invalid security token. Please refresh the page and try again.'
     //     );
     //     echo json_encode($response);
     //     logEvent("CSRF token verification failed for IP: $clientIP");
@@ -120,12 +120,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $message .= "عنوان IP المرسل: " . $clientIP . "\n";
     
     // محاولة إرسال البريد الإلكتروني
-    $headers = "From: " . $email . "\r\n";
+    // استخدام بريد من نفس الدومين كـ From (مطلوب لـ shared hosting)
+    $fromEmail = "no-reply@yasmarina.ae"; // أو أي بريد من نفس الدومين
+    $headers = "From: " . SITE_NAME . " <" . $fromEmail . ">\r\n";
     $headers .= "Reply-To: " . $email . "\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-    $headers .= "X-Mailer: PHP/" . phpversion();
+    $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
+    $headers .= "X-Priority: 3\r\n";
     
-    if (mail(RECIPIENT_EMAIL, EMAIL_SUBJECT, $message, $headers)) {
+    // إضافة معامل خامس لتجنب مشاكل shared hosting
+    $additionalParams = "-f" . $fromEmail;
+    
+    if (@mail(RECIPIENT_EMAIL, EMAIL_SUBJECT, $message, $headers, $additionalParams)) {
         $response = array(
             'alert' => 'alert-success',
             'message' => SUCCESS_MESSAGE
@@ -146,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // إذا لم يكن الطلب POST
     $response = array(
         'alert' => 'alert-danger',
-        'message' => 'طريقة طلب غير صحيحة.'
+        'message' => 'Invalid request method.'
     );
     echo json_encode($response);
     logEvent("Invalid request method from IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));

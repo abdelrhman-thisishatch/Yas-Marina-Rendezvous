@@ -19,7 +19,7 @@ define('SMTP_SECURE', 'tls');
 define('SITE_NAME', 'Yas Marina Rendezvous');
 define('SITE_URL', 'https://hatchtestserver.com/Yas-Marina-Rendezvous');
 
-// Success and Error Messages
+// Success and Error Messages (English)
 define('SUCCESS_MESSAGE', 'Your message has been sent successfully! We will contact you soon.');
 define('ERROR_MESSAGE', 'An error occurred while sending the message. Please try again.');
 define('VALIDATION_ERROR', 'Please fill in all required fields.');
