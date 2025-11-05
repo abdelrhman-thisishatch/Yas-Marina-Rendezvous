@@ -1,36 +1,36 @@
 <?php
-// ملف إعدادات البريد الإلكتروني
-// يمكنك تعديل هذه القيم حسب احتياجاتك
+// Email Configuration File
+// You can modify these values according to your needs
 
-// البريد الإلكتروني المستلم
-define('RECIPIENT_EMAIL', 'abdelrhman.hassan510@gmail.com');
+// Recipient Email
+define('RECIPIENT_EMAIL', 'samer.eladem@yasmarina.ae');
 
-// عنوان الرسالة
-define('EMAIL_SUBJECT', 'رسالة جديدة من موقع Yas Marina Rendezvous');
+// Email Subject
+define('EMAIL_SUBJECT', 'New Message from Yas Marina Rendezvous Website');
 
-// إعدادات SMTP (اختياري - إذا كنت تريد استخدام PHPMailer)
+// SMTP Settings (optional - if you want to use PHPMailer)
 define('SMTP_HOST', 'smtp.gmail.com');
 define('SMTP_PORT', 587);
-define('SMTP_USERNAME', 'your-email@gmail.com'); // بريد المرسل
-define('SMTP_PASSWORD', 'your-app-password'); // كلمة مرور التطبيق
+define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Sender email
+define('SMTP_PASSWORD', 'Apple@2025'); // Application password
 define('SMTP_SECURE', 'tls');
 
-// إعدادات الموقع
+// Site Settings
 define('SITE_NAME', 'Yas Marina Rendezvous');
-define('SITE_URL', 'https://your-domain.com');
+define('SITE_URL', 'https://hatchtestserver.com/Yas-Marina-Rendezvous');
 
-// رسائل النجاح والخطأ
-define('SUCCESS_MESSAGE', 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
-define('ERROR_MESSAGE', 'حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة مرة أخرى.');
-define('VALIDATION_ERROR', 'يرجى ملء جميع الحقول المطلوبة.');
-define('EMAIL_VALIDATION_ERROR', 'يرجى إدخال بريد إلكتروني صحيح.');
+// Success and Error Messages
+define('SUCCESS_MESSAGE', 'Your message has been sent successfully! We will contact you soon.');
+define('ERROR_MESSAGE', 'An error occurred while sending the message. Please try again.');
+define('VALIDATION_ERROR', 'Please fill in all required fields.');
+define('EMAIL_VALIDATION_ERROR', 'Please enter a valid email address.');
 
-// إعدادات الأمان
+// Security Settings
 define('ENABLE_CSRF_PROTECTION', true);
 define('ENABLE_RATE_LIMITING', true);
 define('MAX_REQUESTS_PER_HOUR', 10);
 
-// إعدادات التطوير
+// Development Settings
 define('DEBUG_MODE', false);
 define('LOG_EMAILS', true);
 define('LOG_FILE', 'email_log.txt');

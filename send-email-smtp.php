@@ -94,8 +94,8 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com'; // يمكن تغييرها حسب مزود البريد
         $mail->SMTPAuth = true;
-        $mail->Username = 'your-email@gmail.com'; // بريد المرسل
-        $mail->Password = 'your-app-password'; // كلمة مرور التطبيق
+        $mail->Username = 'abdelrhman.hassan510@gmail.com'; // بريد المرسل
+        $mail->Password = 'Abdelrhman1234567890'; // كلمة مرور التطبيق
         $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
         $mail->CharSet = 'UTF-8';
