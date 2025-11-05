@@ -8,12 +8,13 @@ define('RECIPIENT_EMAIL', 'abdelrhman.hassan510@gmail.com');
 // Email Subject
 define('EMAIL_SUBJECT', 'New Message from Yas Marina Rendezvous Website');
 
-// SMTP Settings (optional - if you want to use PHPMailer)
+// SMTP Settings - Office 365 (Microsoft)
 define('SMTP_HOST', 'smtp.office365.com');
 define('SMTP_PORT', 587);
-define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Sender email
-define('SMTP_PASSWORD', 'Apple@2025'); // Application password
+define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Must exist in Office 365
+define('SMTP_PASSWORD', 'Apple@2025'); // Office 365 password
 define('SMTP_SECURE', 'tls');
+define('SMTP_AUTH', true); // Required for Office 365
 
 // Site Settings
 define('SITE_NAME', 'Yas Marina Rendezvous');
@@ -31,7 +32,7 @@ define('ENABLE_RATE_LIMITING', true);
 define('MAX_REQUESTS_PER_HOUR', 10);
 
 // Development Settings
-define('DEBUG_MODE', false);
+define('DEBUG_MODE', true); // Enable for detailed error logging
 define('LOG_EMAILS', true);
 define('LOG_FILE', 'email_log.txt');
 ?>

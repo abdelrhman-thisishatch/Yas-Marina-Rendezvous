@@ -143,7 +143,7 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
         
-        // Additional SMTP options for reliability
+        // Additional SMTP options for Office 365 and other servers
         $mail->SMTPOptions = array(
             'ssl' => array(
                 'verify_peer' => false,
@@ -151,6 +151,12 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
                 'allow_self_signed' => true
             )
         );
+        
+        // Office 365 specific settings
+        if (strpos(SMTP_HOST, 'office365.com') !== false || strpos(SMTP_HOST, 'outlook.com') !== false) {
+            $mail->SMTPAutoTLS = true;
+            $mail->Timeout = 30;
+        }
         
         // Sender and recipient
         $mail->setFrom(SMTP_USERNAME, SITE_NAME);
