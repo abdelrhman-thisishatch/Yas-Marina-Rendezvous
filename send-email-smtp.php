@@ -1,89 +1,120 @@
 <?php
-// إعدادات البريد الإلكتروني
-$to_email = "abdelrhman.hassan510@gmail.com";
-$subject = "رسالة جديدة من موقع Yas Marina Rendezvous";
+/**
+ * Email Handler with PHPMailer SMTP
+ * Uses configuration from config.php
+ */
 
-// التحقق من أن الطلب POST
+// Load configuration
+require_once 'config.php';
+
+// Start session for rate limiting
+session_start();
+
+// Logging function
+function logEvent($message) {
+    if (defined('LOG_EMAILS') && LOG_EMAILS) {
+        $logEntry = date('Y-m-d H:i:s') . ' - ' . $message . "\n";
+        @file_put_contents(LOG_FILE, $logEntry, FILE_APPEND | LOCK_EX);
+    }
+}
+
+// Rate limiting function
+function checkRateLimit($ip) {
+    if (!defined('ENABLE_RATE_LIMITING') || !ENABLE_RATE_LIMITING) return true;
+    
+    $currentTime = time();
+    $hourAgo = $currentTime - 3600;
+    
+    if (!isset($_SESSION['email_requests'])) {
+        $_SESSION['email_requests'] = array();
+    }
+    
+    $_SESSION['email_requests'] = array_filter($_SESSION['email_requests'], function($time) use ($hourAgo) {
+        return $time > $hourAgo;
+    });
+    
+    if (count($_SESSION['email_requests']) >= MAX_REQUESTS_PER_HOUR) {
+        return false;
+    }
+    
+    $_SESSION['email_requests'][] = $currentTime;
+    return true;
+}
+
+// Main processing
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    // الحصول على البيانات من النموذج
+    $clientIP = $_SERVER['REMOTE_ADDR'];
+    
+    // Rate limiting check
+    if (!checkRateLimit($clientIP)) {
+        echo json_encode([
+            'alert' => 'alert-danger',
+            'message' => 'You have exceeded the maximum number of requests. Please try again after one hour.'
+        ]);
+        logEvent("Rate limit exceeded for IP: $clientIP");
+        exit;
+    }
+    
+    // Get form data
     $name = isset($_POST['contactName']) ? trim($_POST['contactName']) : '';
     $email = isset($_POST['contactEmail']) ? trim($_POST['contactEmail']) : '';
     $enquiry = isset($_POST['contactEnquiry']) ? trim($_POST['contactEnquiry']) : '';
     
-    // التحقق من صحة البيانات
+    // Validation
     if (empty($name) || empty($email) || empty($enquiry)) {
-        $response = array(
+        echo json_encode([
             'alert' => 'alert-danger',
-            'message' => 'Please fill in all required fields.'
-        );
-        echo json_encode($response);
+            'message' => VALIDATION_ERROR
+        ]);
+        logEvent("Validation failed for IP: $clientIP - Empty fields");
         exit;
     }
     
-    // التحقق من صحة البريد الإلكتروني
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $response = array(
+        echo json_encode([
             'alert' => 'alert-danger',
-            'message' => 'Please enter a valid email address.'
-        );
-        echo json_encode($response);
+            'message' => EMAIL_VALIDATION_ERROR
+        ]);
+        logEvent("Validation failed for IP: $clientIP - Invalid email: $email");
         exit;
     }
     
-    // حماية ضد حقن HTML
+    // Sanitize input
     $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
     $email = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
     $enquiry = htmlspecialchars($enquiry, ENT_QUOTES, 'UTF-8');
     
-    // إنشاء محتوى الرسالة
-    $message = "معلومات جديدة من موقع Yas Marina Rendezvous:\n\n";
-    $message .= "الاسم: " . $name . "\n";
-    $message .= "البريد الإلكتروني: " . $email . "\n";
-    $message .= "الاستفسار: " . $enquiry . "\n\n";
-    $message .= "تم إرسال هذه الرسالة في: " . date('Y-m-d H:i:s') . "\n";
+    // Prepare message
+    $message = "New inquiry from " . SITE_NAME . " website:\n\n";
+    $message .= "Name: " . $name . "\n";
+    $message .= "Email: " . $email . "\n";
+    $message .= "Message: " . $enquiry . "\n\n";
+    $message .= "Sent at: " . date('Y-m-d H:i:s') . "\n";
+    $message .= "IP Address: " . $clientIP . "\n";
     
-    // محاولة إرسال البريد الإلكتروني باستخدام وظيفة mail()
-    $fromEmail = "no-reply@yasmarina.ae"; // استخدام بريد من نفس الدومين
-    $headers = "From: Yas Marina Rendezvous <" . $fromEmail . ">\r\n";
-    $headers .= "Reply-To: " . $email . "\r\n";
-    $headers .= "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-    $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
-    
-    $additionalParams = "-f" . $fromEmail;
-    
-    if (@mail($to_email, $subject, $message, $headers, $additionalParams)) {
-        $response = array(
-            'alert' => 'alert-success',
-            'message' => 'Your message has been sent successfully! We will contact you soon.'
-        );
-    } else {
-        // إذا فشل mail()، حاول استخدام PHPMailer
-        $response = sendWithPHPMailer($to_email, $subject, $message, $name, $email);
-    }
-    
-    // إرجاع الاستجابة كـ JSON
+    // Send email using PHPMailer
+    $response = sendWithPHPMailer(RECIPIENT_EMAIL, EMAIL_SUBJECT, $message, $name, $email);
     echo json_encode($response);
     
 } else {
-    // إذا لم يكن الطلب POST
-    $response = array(
+    echo json_encode([
         'alert' => 'alert-danger',
         'message' => 'Invalid request method.'
-    );
-    echo json_encode($response);
+    ]);
+    logEvent("Invalid request method from IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
 }
 
 /**
- * دالة إرسال البريد باستخدام PHPMailer
+ * Function to send email using PHPMailer with SMTP
  */
 function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
-    // التحقق من وجود PHPMailer
+    // Check if PHPMailer is installed
     if (!file_exists('PHPMailer/PHPMailer.php')) {
+        logEvent("❌ PHPMailer not found");
         return array(
             'alert' => 'alert-danger',
-            'message' => 'An error occurred while sending the message. Please try again.'
+            'message' => ERROR_MESSAGE . ' (PHPMailer not installed)'
         );
     }
     
@@ -94,37 +125,60 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
         
         $mail = new PHPMailer\PHPMailer\PHPMailer(true);
         
-        // إعدادات SMTP
+        // Enable verbose debug output (disable in production)
+        if (defined('DEBUG_MODE') && DEBUG_MODE) {
+            $mail->SMTPDebug = 2;
+            $mail->Debugoutput = function($str, $level) {
+                logEvent("SMTP Debug: $str");
+            };
+        }
+        
+        // SMTP settings from config.php
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com'; // يمكن تغييرها حسب مزود البريد
+        $mail->Host = SMTP_HOST;
         $mail->SMTPAuth = true;
-        $mail->Username = 'abdelrhman.hassan510@gmail.com'; // بريد المرسل
-        $mail->Password = 'Abdelrhman1234567890'; // كلمة مرور التطبيق
-        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        $mail->Username = SMTP_USERNAME;
+        $mail->Password = SMTP_PASSWORD;
+        $mail->SMTPSecure = SMTP_SECURE;
+        $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
         
-        // إعدادات المرسل والمستقبل
-        $mail->setFrom('no-reply@yasmarina.ae', 'Yas Marina Rendezvous');
+        // Additional SMTP options for reliability
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+        
+        // Sender and recipient
+        $mail->setFrom(SMTP_USERNAME, SITE_NAME);
         $mail->addAddress($to_email);
         $mail->addReplyTo($from_email, $name);
         
-        // محتوى الرسالة
+        // Message content
         $mail->isHTML(false);
         $mail->Subject = $subject;
         $mail->Body = $message;
         
+        // Send email
         $mail->send();
+        
+        logEvent("✅ Email sent successfully via SMTP to: $to_email, From: $from_email");
         
         return array(
             'alert' => 'alert-success',
-            'message' => 'Your message has been sent successfully! We will contact you soon.'
+            'message' => SUCCESS_MESSAGE
         );
         
     } catch (Exception $e) {
+        $errorMsg = $mail->ErrorInfo;
+        logEvent("❌ PHPMailer Error: " . $errorMsg);
+        
         return array(
             'alert' => 'alert-danger',
-            'message' => 'An error occurred while sending the message: ' . $mail->ErrorInfo
+            'message' => ERROR_MESSAGE
         );
     }
 }
