@@ -9,7 +9,7 @@ define('RECIPIENT_EMAIL', 'abdelrhman.hassan510@gmail.com');
 define('EMAIL_SUBJECT', 'New Message from Yas Marina Rendezvous Website');
 
 // SMTP Settings (optional - if you want to use PHPMailer)
-define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_HOST', 'smtp.office365.com');
 define('SMTP_PORT', 587);
 define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Sender email
 define('SMTP_PASSWORD', 'Apple@2025'); // Application password
