@@ -34,7 +34,7 @@
                 <div class="col-auto col-lg-2 menu-logo">
                     <a class="navbar-brand text-center" href="">
                         <img src="images/logo.png" data-at2x="images/logo.png" alt="" class="default-logo"
-                            style="width: 70%;">
+                            style="width: 200px;">
                         <img src="images/logo.png" data-at2x="images/logo.png" alt="" class="alt-logo">
                         <img src="images/logo.png" data-at2x="images/logo.png" alt="" class="mobile-logo">
                     </a>
@@ -108,7 +108,7 @@
     <!-- end header -->
     
     <!-- Internal divider frame with text on top - Extended throughout the page -->
-    <div class="position-absolute w-100 header-divider" style="top: 110px; left: 0; right: 0; padding: 10px; pointer-events: none; z-index: 1;">
+    <div class="header-divider w-100" style="padding: 10px; pointer-events: none; z-index: 1;">
         <!-- Top border with text in the middle -->
         <div class="position-relative w-100 d-flex align-items-center justify-content-center" style="height: 1px;">
             <div class="flex-grow-1" style="height: 1.3px; background-color: white; border-radius: 2px;"></div>
@@ -132,12 +132,12 @@
     <section id="home" class="full-screen bg-dark-gray ipad-top-space-margin position-relative md-h-600px sm-h-500px"
         data-parallax-background-ratio="0.5" style="background-image: url('images/header.png');    background-size: 100% 100% !important;">
         
-        <div class="container h-100 align-items-start align-items-md-end justify-content-center py-5" id="header_sm">
+        <div class="container h-100 align-items-start align-items-md-end justify-content-center pt-5" id="header_sm">
             <div class="row align-items-end justify-content-center lg-hi-100 md-hi-50 sm-hi-100">
                 <div class="col-lg-10 col-md-12 text-center"
                     data-anime='{ "el": "childs", "translateY": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 300, "easing": "easeOutQuad" }'>
                     <!-- <span class="fs-20 text-white text-uppercase text-shadow-double-large fw-200 d-block mb-25px sm-mb-15px">JOIN US</span> -->
-                    <h1 class="fs-30 lg-fs-50 alt-font fw-100 text-white mb-0 text-shadow-double-large xs-fs-15">
+                    <h1 class="fs-30 lg-fs-50 alt-font fw-100 text-white mb-0 text-shadow-double-large pb-2 xs-fs-15">
                         JOIN US FOR AN UNFORGETTABLE SAILING JOURNEY<br>FROM YAS MARINA TO SIR BANI YAS ISLAND</h1>
                     <span class="fs-20 text-white text-uppercase text-shadow-double-large fw-200 d-block sm-mb-15px">8
                         TO 11 DECEMBER 2025</span>
@@ -211,8 +211,8 @@
             <div class="row align-items-center"
                 data-anime='{ "el": "childs", "translateX": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 300, "easing": "easeOutQuad" }'>
                 <div class="col-md-6">
-                    <h5 class="text-white lh-50 fw-400 fs-60 sm-pt-5 sm-mt-5 pb-3 mb-0">Follow the Fleet</h5>
-                    <span class="text-white lh-50 fs-30 fw-100">Track the Journey in<br>Real Time </span>
+                    <!-- <h5 class="text-white lh-50 fw-400 fs-60 sm-pt-5 sm-mt-5 pb-3 mb-0">Follow the Fleet</h5> -->
+                    <span class="text-white lh-50 fs-30 fw-100 nowrap">Track the Journey in Real Time </span>
                 </div>
                 <div class="col-md-6 px-0">
                     <img src="images/map.png" alt="" class="img-fluid image-map">
@@ -481,7 +481,7 @@
                 <!-- Contact info for desktop (hidden on mobile) -->
                 <div
                     class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-lg-start align-items-center text-white contact-info">
-                    <div class="contact-info-title fw-400 d-flex text-lg-start text-center text-uppercase lh-1">register your interest now</div>
+                    <div class="contact-info-title fw-400 d-flex text-lg-start text-center text-uppercase lh-1">register your<br>interest now</div>
                     <div class="contact-info-sub d-flex text-lg-start text-center">
                         <!-- Have a question<br>or want to get
                         involved? -->
@@ -500,6 +500,21 @@
     <!-- end contact section -->
 
     <style>
+        /* Make body relative for absolute positioning */
+        body {
+            position: relative !important;
+        }
+        
+        /* Header divider - absolute position relative to body with full height */
+        .header-divider {
+            position: absolute !important;
+            top: 110px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* height: 100% !important; */
+        }
+        
         .newsletter-bar {
             background: #396D90;
             padding: 110px 0 100px 0;
@@ -778,34 +793,8 @@
     </script>
 
     <script>
-        // Update divider height to cover full page height
-        function updateDividerHeight() {
-            const divider = document.querySelector('.header-divider');
-            if (divider) {
-                const pageHeight = Math.max(
-                    document.body.scrollHeight,
-                    document.body.offsetHeight,
-                    document.documentElement.clientHeight,
-                    document.documentElement.scrollHeight,
-                    document.documentElement.offsetHeight
-                );
-                const topOffset = 110;
-                divider.style.height = (pageHeight - topOffset) + 'px';
-            }
-        }
-
-        // Update on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            updateDividerHeight();
-        });
-
-        // Update on window resize
-        window.addEventListener('resize', function() {
-            updateDividerHeight();
-        });
-
-        // Update when content changes (for dynamic content)
-        setTimeout(updateDividerHeight, 100);
+        // No JavaScript needed - CSS handles the height with calc(100% - 110px)
+        // The divider will automatically adjust to body height changes
     </script>
 
 

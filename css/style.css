@@ -28065,12 +28065,12 @@ footer .footer-navbar .nav-item:last-child a {
 }
 
 
-@media(max-width:800px){
+@media(max-width:991px){
   #header_sm{
     display: flex;
     align-items: center;
   }
-  /* .header-divider{
+  .header-divider{
     top: 30px!important;
-  } */
+  }
 }

@@ -9,10 +9,10 @@ define('RECIPIENT_EMAIL', 'abdelrhman.hassan510@gmail.com');
 define('EMAIL_SUBJECT', 'New Yacht Registration - Yas Marina Rendezvous');
 
 // SMTP Settings - Office 365 (Microsoft)
-define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_HOST', 'smtp.office365.com');
 define('SMTP_PORT', 587);
-define('SMTP_USERNAME', 'abdelrhman@thisishatch.com'); // Must exist in Office 365
-define('SMTP_PASSWORD', 'apyb qfyl hsyq qbkt'); // Office 365 password
+define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Must exist in Office 365
+define('SMTP_PASSWORD', 'Apple@2025'); // Office 365 password
 define('SMTP_SECURE', 'tls');
 define('SMTP_AUTH', true); // Required for Office 365
 
