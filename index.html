@@ -476,6 +476,69 @@
                         <button type="submit" class="btn btn-submit w-100 bg-dark-gray fw-100 submit">SUBMIT</button>
                         <div class="form-results mt-3 d-none"></div>
                     </form>
+                    
+                    <script>
+                        // Handle form submission with AJAX
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const form = document.querySelector('.contact-form-custom');
+                            const resultsDiv = form.querySelector('.form-results');
+                            const submitBtn = form.querySelector('.submit');
+                            
+                            if (form) {
+                                form.addEventListener('submit', function(e) {
+                                    e.preventDefault();
+                                    
+                                    // Disable submit button
+                                    submitBtn.disabled = true;
+                                    submitBtn.textContent = 'SENDING...';
+                                    
+                                    // Hide previous results
+                                    resultsDiv.classList.add('d-none');
+                                    
+                                    // Get form data
+                                    const formData = new FormData(form);
+                                    
+                                    // Send AJAX request
+                                    fetch('send-email-smtp.php', {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // Show results
+                                        resultsDiv.className = 'form-results mt-3 alert ' + data.alert;
+                                        resultsDiv.textContent = data.message;
+                                        resultsDiv.classList.remove('d-none');
+                                        
+                                        // Reset button
+                                        submitBtn.disabled = false;
+                                        submitBtn.textContent = 'SUBMIT';
+                                        
+                                        // Reset form if success
+                                        if (data.alert === 'alert-success') {
+                                            form.reset();
+                                            // Hide success message after 5 seconds
+                                            setTimeout(function() {
+                                                resultsDiv.classList.add('d-none');
+                                            }, 5000);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Show error
+                                        resultsDiv.className = 'form-results mt-3 alert alert-danger';
+                                        resultsDiv.textContent = 'An error occurred. Please try again.';
+                                        resultsDiv.classList.remove('d-none');
+                                        
+                                        // Reset button
+                                        submitBtn.disabled = false;
+                                        submitBtn.textContent = 'SUBMIT';
+                                        
+                                        console.error('Error:', error);
+                                    });
+                                });
+                            }
+                        });
+                    </script>
                 </div>
                 <!-- Contact info for desktop (hidden on mobile) -->
                 <div

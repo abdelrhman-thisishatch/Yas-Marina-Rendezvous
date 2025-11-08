@@ -4,6 +4,9 @@
  * Uses configuration from config.php
  */
 
+// Set JSON header for AJAX responses
+header('Content-Type: application/json; charset=utf-8');
+
 // Load configuration
 require_once 'config.php';
 
