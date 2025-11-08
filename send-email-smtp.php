@@ -152,11 +152,80 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
         $mail->SMTPAuth = true;
-        $mail->Username = SMTP_USERNAME;
-        $mail->Password = SMTP_PASSWORD;
         $mail->SMTPSecure = SMTP_SECURE;
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
+        
+        // Check if OAuth2 is enabled
+        $useOAuth2 = defined('USE_OAUTH2') && USE_OAUTH2 === true;
+        
+        if ($useOAuth2) {
+            // OAuth2 Authentication (Recommended for Microsoft 365)
+            logEvent("🔐 Using OAuth2 authentication");
+            
+            // Check if OAuth2 dependencies are available
+            if (!file_exists('PHPMailer/OAuth.php')) {
+                logEvent("❌ PHPMailer OAuth.php not found");
+                return array(
+                    'alert' => 'alert-danger',
+                    'message' => ERROR_MESSAGE . ' (OAuth2 support not available)'
+                );
+            }
+            
+            // Check if League OAuth2 Client is installed
+            if (!class_exists('League\OAuth2\Client\Provider\GenericProvider')) {
+                logEvent("❌ League OAuth2 Client library not found. Please install via Composer.");
+                return array(
+                    'alert' => 'alert-danger',
+                    'message' => ERROR_MESSAGE . ' (OAuth2 library not installed. Run: composer install)'
+                );
+            }
+            
+            require_once 'PHPMailer/OAuth.php';
+            require_once 'PHPMailer/OAuthTokenProvider.php';
+            
+            // Validate OAuth2 configuration
+            if (empty(OAUTH_CLIENT_ID) || empty(OAUTH_CLIENT_SECRET) || empty(OAUTH_REFRESH_TOKEN)) {
+                logEvent("❌ OAuth2 configuration incomplete. Check config.php");
+                return array(
+                    'alert' => 'alert-danger',
+                    'message' => ERROR_MESSAGE . ' (OAuth2 configuration incomplete)'
+                );
+            }
+            
+            // Create Microsoft OAuth2 Provider
+            $tenantId = !empty(OAUTH_TENANT_ID) ? OAUTH_TENANT_ID : 'common';
+            $provider = new \League\OAuth2\Client\Provider\GenericProvider([
+                'clientId' => OAUTH_CLIENT_ID,
+                'clientSecret' => OAUTH_CLIENT_SECRET,
+                'redirectUri' => SITE_URL . '/oauth-callback.php',
+                'urlAuthorize' => "https://login.microsoftonline.com/$tenantId/oauth2/v2.0/authorize",
+                'urlAccessToken' => "https://login.microsoftonline.com/$tenantId/oauth2/v2.0/token",
+                'urlResourceOwnerDetails' => 'https://graph.microsoft.com/v1.0/me',
+                'scopes' => ['https://outlook.office.com/SMTP.Send', 'offline_access']
+            ]);
+            
+            // Create OAuth instance
+            $oauth = new PHPMailer\PHPMailer\OAuth([
+                'provider' => $provider,
+                'userName' => OAUTH_USER_EMAIL,
+                'clientSecret' => OAUTH_CLIENT_SECRET,
+                'clientId' => OAUTH_CLIENT_ID,
+                'refreshToken' => OAUTH_REFRESH_TOKEN
+            ]);
+            
+            // Set OAuth for PHPMailer
+            $mail->setOAuth($oauth);
+            $mail->AuthType = 'XOAUTH2';
+            $mail->Username = OAUTH_USER_EMAIL;
+            $mail->Password = ''; // Not used with OAuth2
+            
+        } else {
+            // Traditional Username/Password Authentication (Deprecated)
+            logEvent("⚠️ Using password authentication (deprecated for Microsoft 365)");
+            $mail->Username = SMTP_USERNAME;
+            $mail->Password = SMTP_PASSWORD;
+        }
         
         // Additional SMTP options for Office 365 and other servers
         $mail->SMTPOptions = array(
@@ -174,7 +243,8 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
         }
         
         // Sender and recipient
-        $mail->setFrom(SMTP_USERNAME, SITE_NAME);
+        $fromEmail = $useOAuth2 ? OAUTH_USER_EMAIL : SMTP_USERNAME;
+        $mail->setFrom($fromEmail, SITE_NAME);
         $mail->addAddress($to_email);
         $mail->addReplyTo($from_email, $name);
         

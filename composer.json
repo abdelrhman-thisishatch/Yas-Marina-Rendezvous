@@ -1,0 +1,15 @@
+{
+    "name": "yas-marina-rendezvous/email-handler",
+    "description": "Email handler with OAuth2 support for Microsoft 365",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "league/oauth2-client": "^2.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "PHPMailer\\PHPMailer\\": "PHPMailer/"
+        }
+    }
+}
+

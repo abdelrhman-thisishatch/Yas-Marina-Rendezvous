@@ -12,9 +12,18 @@ define('EMAIL_SUBJECT', 'New Yacht Registration - Yas Marina Rendezvous');
 define('SMTP_HOST', 'smtp.office365.com');
 define('SMTP_PORT', 587);
 define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Must exist in Office 365
-define('SMTP_PASSWORD', 'Apple@2025'); // Office 365 password
+define('SMTP_PASSWORD', 'Apple@2025'); // Office 365 password (deprecated - use OAuth2)
 define('SMTP_SECURE', 'tls');
 define('SMTP_AUTH', true); // Required for Office 365
+
+// OAuth2 Settings for Microsoft 365 (Recommended - replaces App Password)
+// Set USE_OAUTH2 to true to enable OAuth2 authentication
+define('USE_OAUTH2', false); // Set to true to use OAuth2 instead of password
+define('OAUTH_CLIENT_ID', ''); // Azure App Registration Client ID
+define('OAUTH_CLIENT_SECRET', ''); // Azure App Registration Client Secret
+define('OAUTH_TENANT_ID', ''); // Azure Tenant ID (optional, can use 'common')
+define('OAUTH_REFRESH_TOKEN', ''); // OAuth2 Refresh Token (obtained after initial auth)
+define('OAUTH_USER_EMAIL', 'no-reply@yasmarina.ae'); // Email address for OAuth2
 
 // Site Settings
 define('SITE_NAME', 'Yas Marina Rendezvous');
