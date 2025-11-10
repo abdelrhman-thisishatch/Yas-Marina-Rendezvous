@@ -131,10 +131,17 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         $fp = @fsockopen($connectionString, $port, $errno, $errstr, 30);
         
         if (!$fp) {
-            logNative("❌ Connection failed: $errstr ($errno)");
+            $errorMsg = "Connection failed: $errstr ($errno)";
+            logNative("❌ $errorMsg");
+            
+            $errorMessage = ERROR_MESSAGE;
+            if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                $errorMessage .= " (Debug: $errorMsg)";
+            }
+            
             return array(
                 'alert' => 'alert-danger',
-                'message' => ERROR_MESSAGE . " (Connection failed: $errstr)"
+                'message' => $errorMessage
             );
         }
         
@@ -156,10 +163,17 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         $greeting = readLine($fp);
         if (substr($greeting, 0, 3) != '220') {
             fclose($fp);
-            logNative("❌ Invalid server greeting: $greeting");
+            $errorMsg = "Invalid server greeting: " . trim($greeting);
+            logNative("❌ $errorMsg");
+            
+            $errorMessage = ERROR_MESSAGE;
+            if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                $errorMessage .= " (Debug: $errorMsg)";
+            }
+            
             return array(
                 'alert' => 'alert-danger',
-                'message' => ERROR_MESSAGE . " (Invalid server response)"
+                'message' => $errorMessage
             );
         }
         
@@ -172,20 +186,34 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
             $starttlsResponse = writeLine($fp, "STARTTLS");
             if (substr($starttlsResponse, 0, 3) != '220') {
                 fclose($fp);
-                logNative("❌ STARTTLS failed");
+                $errorMsg = "STARTTLS failed. Server response: " . trim($starttlsResponse);
+                logNative("❌ $errorMsg");
+                
+                $errorMessage = ERROR_MESSAGE . " (STARTTLS failed)";
+                if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                    $errorMessage .= " - " . htmlspecialchars(trim($starttlsResponse));
+                }
+                
                 return array(
                     'alert' => 'alert-danger',
-                    'message' => ERROR_MESSAGE . " (STARTTLS failed)"
+                    'message' => $errorMessage
                 );
             }
             
             // Enable crypto
             if (!stream_socket_enable_crypto($fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
                 fclose($fp);
-                logNative("❌ TLS encryption failed");
+                $errorMsg = "TLS encryption failed. Cannot enable crypto.";
+                logNative("❌ $errorMsg");
+                
+                $errorMessage = ERROR_MESSAGE . " (TLS encryption failed)";
+                if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                    $errorMessage .= " - Cannot enable TLS encryption";
+                }
+                
                 return array(
                     'alert' => 'alert-danger',
-                    'message' => ERROR_MESSAGE . " (TLS encryption failed)"
+                    'message' => $errorMessage
                 );
             }
             
@@ -197,10 +225,17 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         $authResponse = writeLine($fp, "AUTH LOGIN");
         if (substr($authResponse, 0, 3) != '334') {
             fclose($fp);
-            logNative("❌ AUTH LOGIN failed: $authResponse");
+            $errorMsg = "AUTH LOGIN failed. Server response: " . trim($authResponse);
+            logNative("❌ $errorMsg");
+            
+            $errorMessage = ERROR_MESSAGE . " (AUTH LOGIN failed)";
+            if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                $errorMessage .= " - " . htmlspecialchars(trim($authResponse));
+            }
+            
             return array(
                 'alert' => 'alert-danger',
-                'message' => ERROR_MESSAGE . " (Authentication failed)"
+                'message' => $errorMessage
             );
         }
         
@@ -208,10 +243,18 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         $userResponse = writeLine($fp, base64_encode($user));
         if (substr($userResponse, 0, 3) != '334') {
             fclose($fp);
-            logNative("❌ Username rejected");
+            $errorMsg = "Username rejected. Server response: " . trim($userResponse);
+            logNative("❌ $errorMsg");
+            logNative("❌ Username sent: $user");
+            
+            $errorMessage = ERROR_MESSAGE . " (Username rejected)";
+            if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                $errorMessage .= " - " . htmlspecialchars(trim($userResponse));
+            }
+            
             return array(
                 'alert' => 'alert-danger',
-                'message' => ERROR_MESSAGE . " (Username rejected)"
+                'message' => $errorMessage
             );
         }
         
@@ -219,10 +262,19 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         $passResponse = writeLine($fp, base64_encode($pass));
         if (substr($passResponse, 0, 3) != '235') {
             fclose($fp);
-            logNative("❌ Password rejected: $passResponse");
+            $errorMsg = "Authentication failed. Server response: " . trim($passResponse);
+            logNative("❌ $errorMsg");
+            logNative("❌ Username: $user");
+            logNative("❌ Password length: " . strlen($pass) . " characters");
+            
+            $errorMessage = ERROR_MESSAGE . " (Authentication failed)";
+            if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                $errorMessage .= " - Server: " . htmlspecialchars(trim($passResponse));
+            }
+            
             return array(
                 'alert' => 'alert-danger',
-                'message' => ERROR_MESSAGE . " (Authentication failed - check username/password)"
+                'message' => $errorMessage
             );
         }
         
@@ -232,10 +284,18 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         $mailFromResponse = writeLine($fp, "MAIL FROM:<$from>");
         if (substr($mailFromResponse, 0, 3) != '250') {
             fclose($fp);
-            logNative("❌ MAIL FROM failed: $mailFromResponse");
+            $errorMsg = "MAIL FROM failed. Server response: " . trim($mailFromResponse);
+            logNative("❌ $errorMsg");
+            logNative("❌ From address: $from");
+            
+            $errorMessage = ERROR_MESSAGE . " (MAIL FROM failed)";
+            if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                $errorMessage .= " - " . htmlspecialchars(trim($mailFromResponse));
+            }
+            
             return array(
                 'alert' => 'alert-danger',
-                'message' => ERROR_MESSAGE . " (MAIL FROM failed)"
+                'message' => $errorMessage
             );
         }
         
@@ -243,10 +303,18 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         $rcptResponse = writeLine($fp, "RCPT TO:<$to>");
         if (substr($rcptResponse, 0, 3) != '250') {
             fclose($fp);
-            logNative("❌ RCPT TO failed: $rcptResponse");
+            $errorMsg = "RCPT TO failed. Server response: " . trim($rcptResponse);
+            logNative("❌ $errorMsg");
+            logNative("❌ To address: $to");
+            
+            $errorMessage = ERROR_MESSAGE . " (RCPT TO failed)";
+            if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                $errorMessage .= " - " . htmlspecialchars(trim($rcptResponse));
+            }
+            
             return array(
                 'alert' => 'alert-danger',
-                'message' => ERROR_MESSAGE . " (RCPT TO failed)"
+                'message' => $errorMessage
             );
         }
         
@@ -254,10 +322,17 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         $dataResponse = writeLine($fp, "DATA");
         if (substr($dataResponse, 0, 3) != '354') {
             fclose($fp);
-            logNative("❌ DATA command failed: $dataResponse");
+            $errorMsg = "DATA command failed. Server response: " . trim($dataResponse);
+            logNative("❌ $errorMsg");
+            
+            $errorMessage = ERROR_MESSAGE . " (DATA command failed)";
+            if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                $errorMessage .= " - " . htmlspecialchars(trim($dataResponse));
+            }
+            
             return array(
                 'alert' => 'alert-danger',
-                'message' => ERROR_MESSAGE . " (DATA command failed)"
+                'message' => $errorMessage
             );
         }
         
@@ -283,10 +358,17 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         $dataEndResponse = readLine($fp);
         if (substr($dataEndResponse, 0, 3) != '250') {
             fclose($fp);
-            logNative("❌ Email sending failed: $dataEndResponse");
+            $errorMsg = "Email sending failed. Server response: " . trim($dataEndResponse);
+            logNative("❌ $errorMsg");
+            
+            $errorMessage = ERROR_MESSAGE . " (Email sending failed)";
+            if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                $errorMessage .= " - Server: " . htmlspecialchars(trim($dataEndResponse));
+            }
+            
             return array(
                 'alert' => 'alert-danger',
-                'message' => ERROR_MESSAGE . " (Email sending failed)"
+                'message' => $errorMessage
             );
         }
         
@@ -304,10 +386,21 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         );
         
     } catch (Exception $e) {
-        logNative("❌ Exception: " . $e->getMessage());
+        $errorDetails = $e->getMessage();
+        $errorTrace = $e->getTraceAsString();
+        
+        logNative("❌ Exception: " . $errorDetails);
+        logNative("❌ Trace: " . $errorTrace);
+        
+        // Return error with details if DEBUG_MODE is enabled
+        $errorMessage = ERROR_MESSAGE;
+        if (defined('DEBUG_MODE') && DEBUG_MODE) {
+            $errorMessage .= " (Error: " . htmlspecialchars($errorDetails) . ")";
+        }
+        
         return array(
             'alert' => 'alert-danger',
-            'message' => ERROR_MESSAGE . " (" . $e->getMessage() . ")"
+            'message' => $errorMessage
         );
     }
 }
