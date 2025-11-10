@@ -13,8 +13,8 @@ define('EMAIL_SUBJECT', 'New Yacht Registration - Yas Marina Rendezvous');
 // SMTP Settings - Hostinger
 define('SMTP_HOST', 'smtp.hostinger.com');
 define('SMTP_PORT', 465); // Port 465 with SSL
-define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Full email address
-define('SMTP_PASSWORD', 'M[1t~/zhgkl'); // Email password
+define('SMTP_USERNAME', 'info@tebian.co'); // Full email address
+define('SMTP_PASSWORD', '5101997Aa@'); // Email password
 define('SMTP_SECURE', 'ssl'); // SSL encryption (lowercase required)
 define('SMTP_AUTH', true);
 
