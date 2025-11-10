@@ -447,7 +447,7 @@
                 </div>
                 <div class="col-lg-6 mb-lg-0 mb-25px mb-lg-0 d-flex justify-content-center ">
                     <form class="bg-white p-40px rounded-3 shadow-sm w-100 contact-form-custom "
-                        style="max-width: 400px;" action="send-email-native.php" method="POST">
+                        style="max-width: 400px;" action="send-email-simple.php" method="POST">
                         <div class="mb-3">
                             <label for="yachtName" class="form-label">Name of Yacht</label>
                             <input type="text" class="form-control required" id="yachtName" name="yachtName" required>
@@ -498,8 +498,8 @@
                                     // Get form data
                                     const formData = new FormData(form);
                                     
-                                    // Send AJAX request - Using PHP Native SMTP method
-                                    fetch('send-email-native.php', {
+                                    // Send AJAX request - Using PHP simple mail() function
+                                    fetch('send-email-simple.php', {
                                         method: 'POST',
                                         body: formData
                                     })
