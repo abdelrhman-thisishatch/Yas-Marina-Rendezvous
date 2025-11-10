@@ -498,8 +498,8 @@
                                     // Get form data
                                     const formData = new FormData(form);
                                     
-                                    // Send AJAX request
-                                    fetch('send-email-smtp.php', {
+                                    // Send AJAX request - Using Hostinger standalone file
+                                    fetch('send-email-hostinger.php', {
                                         method: 'POST',
                                         body: formData
                                     })
