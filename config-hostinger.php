@@ -10,11 +10,10 @@ define('EMAIL_SUBJECT', 'New Yacht Registration - Yas Marina Rendezvous');
 
 // SMTP Settings - Hostinger (Test Configuration)
 define('SMTP_HOST', 'smtp.hostinger.com');
-define('SMTP_PORT', 587); // Port 587 with TLS
+define('SMTP_PORT', 465); // Port 587 with TLS
 define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Full email address
 define('SMTP_PASSWORD', 'M[1t~/zhgkl'); // Email password
-define('SMTP_SECURE', 'tls'); // TLS encryption
-define('SMTP_AUTH', true);
+define('SMTP_SECURE', 'SSL'); // TLS encryption
 
 // Site Settings
 define('SITE_NAME', 'Yas Marina Rendezvous');
