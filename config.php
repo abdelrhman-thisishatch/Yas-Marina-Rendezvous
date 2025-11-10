@@ -8,13 +8,13 @@ define('RECIPIENT_EMAIL', 'abdelrhman.hassan510@gmail.com');
 // Email Subject
 define('EMAIL_SUBJECT', 'New Yacht Registration - Yas Marina Rendezvous');
 
-// SMTP Settings - Office 365 (Microsoft)
-define('SMTP_HOST', 'smtp.office365.com');
-define('SMTP_PORT', 587);
-define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Must exist in Office 365
-define('SMTP_PASSWORD', 'Apple@2025'); // Office 365 password (deprecated - use OAuth2)
-define('SMTP_SECURE', 'tls');
-define('SMTP_AUTH', true); // Required for Office 365
+// SMTP Settings - Hostinger
+define('SMTP_HOST', 'smtp.hostinger.com');
+define('SMTP_PORT', 465);
+define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Email account
+define('SMTP_PASSWORD', 'M[1t~/zhgkl'); // Email password
+define('SMTP_SECURE', 'ssl'); // SSL for port 465
+define('SMTP_AUTH', true); // Required for Hostinger
 
 // OAuth2 Settings for Microsoft 365 (Recommended - replaces App Password)
 // Set USE_OAUTH2 to true to enable OAuth2 authentication

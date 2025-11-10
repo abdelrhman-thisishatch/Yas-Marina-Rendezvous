@@ -37,7 +37,7 @@ if (empty(OAUTH_CLIENT_ID) || empty(OAUTH_CLIENT_SECRET)) {
     <body style="font-family: Arial; padding: 20px;">
         <h2 style="color: red;">❌ OAuth2 Configuration Missing</h2>
         <p>Please configure OAUTH_CLIENT_ID and OAUTH_CLIENT_SECRET in config.php first.</p>
-        <p>See OAUTH2-SETUP-GUIDE.md for instructions.</p>
+        <p>See docs/OAUTH2-SETUP-GUIDE.md for instructions.</p>
     </body>
     </html>');
 }
@@ -254,7 +254,7 @@ $provider = new GenericProvider([
         
         <hr style="margin: 30px 0;">
         <p style="color: #666; font-size: 12px;">
-            For detailed setup instructions, see <code>OAUTH2-SETUP-GUIDE.md</code>
+            For detailed setup instructions, see <code>docs/OAUTH2-SETUP-GUIDE.md</code>
         </p>
     </div>
 </body>

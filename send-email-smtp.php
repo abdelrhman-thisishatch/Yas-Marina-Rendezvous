@@ -230,7 +230,7 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
             $mail->Password = SMTP_PASSWORD;
         }
         
-        // Additional SMTP options for Office 365 and other servers
+        // Additional SMTP options for SSL/TLS connections
         $mail->SMTPOptions = array(
             'ssl' => array(
                 'verify_peer' => false,
@@ -239,7 +239,16 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
             )
         );
         
-        // Office 365 specific settings
+        // Hostinger specific settings
+        if (strpos(SMTP_HOST, 'hostinger.com') !== false) {
+            $mail->Timeout = 30;
+            // Port 465 uses SSL directly (SMTPS)
+            if (SMTP_PORT == 465) {
+                $mail->SMTPSecure = 'ssl';
+            }
+        }
+        
+        // Office 365 specific settings (if using OAuth2)
         if (strpos(SMTP_HOST, 'office365.com') !== false || strpos(SMTP_HOST, 'outlook.com') !== false) {
             $mail->SMTPAutoTLS = true;
             $mail->Timeout = 30;
