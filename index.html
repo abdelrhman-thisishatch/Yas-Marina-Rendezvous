@@ -435,72 +435,227 @@
      
 
     <!-- start contact section -->
-    <section id="contact-section" class="bg-dark-gray d-flex align-items-center">
+    <section id="contact-section" class="bg-dark-gray" style="display: flex; align-items: center;">
+
         <div class="container">
-          <div class="row justify-content-center align-items-center">
-      
-            <!-- عنوان للموبايل فقط -->
-            <div class="d-block d-lg-none mb-4">
-              <div class="contact-info-title fw-400 text-center text-uppercase lh-1">
-                register your<br>interest now
-              </div>
+            <div class="row justify-content-center align-items-center">
+                <!-- Contact info for mobile (visible only on mobile) -->
+                <div class="d-block d-lg-none mb-4">
+                    <div class="contact-info-title fw-400 d-flex text-lg-start text-center lh-1 text-uppercase justify-content-center">
+                        register your<br>
+                        interest now</div>
+                </div>
+                <div class="col-lg-6 mb-lg-0 mb-25px mb-lg-0 d-flex justify-content-center ">
+                    <form class="bg-white p-40px rounded-3 shadow-sm w-100 contact-form-custom no-jquery-handler"
+                        style="max-width: 400px;" action="send-email-hostinger.php" method="POST">
+                        <div class="mb-3">
+                            <label for="yachtName" class="form-label">Name of Yacht</label>
+                            <input type="text" class="form-control required" id="yachtName" name="yachtName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loaMeters" class="form-label">LOA (meters)</label>
+                            <input type="number" step="0.01" class="form-control required" id="loaMeters" name="loaMeters" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ownerName" class="form-label">Name of Owner</label>
+                            <input type="text" class="form-control required" id="ownerName" name="ownerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mobileNumber" class="form-label">Mobile Number</label>
+                            <input type="tel" class="form-control required" id="mobileNumber" name="mobileNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactEmail" class="form-label">Email Address</label>
+                            <input type="email" class="form-control required" id="contactEmail" name="contactEmail" required>
+                        </div>
+                        <div class="mb-3 form-text">
+                            By submitting this form, I agree to the
+                            <a style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#Privacy_Policy"
+                                data-bs-whatever="@mdo">Privacy Policy.</a>
+                        </div>
+                        <button type="submit" class="btn btn-submit w-100 bg-dark-gray fw-100 submit">SUBMIT</button>
+                        <div class="form-results mt-3 d-none"></div>
+                    </form>
+                    
+                    <script>
+                        // Pure JavaScript - No jQuery dependencies
+                        (function() {
+                            'use strict';
+                            
+                            // Request notification permission
+                            if ('Notification' in window && Notification.permission === 'default') {
+                                Notification.requestPermission();
+                            }
+                            
+                            // Wait for DOM to be ready
+                            function initForm() {
+                                var form = document.querySelector('.contact-form-custom');
+                                if (!form) {
+                                    setTimeout(initForm, 100);
+                                    return;
+                                }
+                                
+                                var resultsDiv = form.querySelector('.form-results');
+                                var submitBtn = form.querySelector('.submit');
+                                
+                                if (!resultsDiv || !submitBtn) return;
+                                
+                                // Function to show notification
+                                function showNotification(message, isSuccess) {
+                                    // Remove any existing classes
+                                    resultsDiv.className = 'form-results mt-3';
+                                    
+                                    // Set styles directly
+                                    resultsDiv.style.display = 'block';
+                                    resultsDiv.style.visibility = 'visible';
+                                    resultsDiv.style.backgroundColor = isSuccess ? '#d1e7dd' : '#f8d7da';
+                                    resultsDiv.style.border = '2px solid ' + (isSuccess ? '#badbcc' : '#f5c2c7');
+                                    resultsDiv.style.color = isSuccess ? '#0f5132' : '#842029';
+                                    resultsDiv.style.padding = '20px';
+                                    resultsDiv.style.borderRadius = '8px';
+                                    resultsDiv.style.fontWeight = '500';
+                                    resultsDiv.style.marginTop = '20px';
+                                    resultsDiv.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                                    resultsDiv.style.zIndex = '9999';
+                                    resultsDiv.style.position = 'relative';
+                                    
+                                    // Create close button handler
+                                    var closeBtnId = 'close-btn-' + Date.now();
+                                    
+                                    // Set HTML content
+                                    var icon = isSuccess ? '✅' : '❌';
+                                    var title = isSuccess ? 'Success!' : 'Error!';
+                                    resultsDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;">' +
+                                        '<span style="font-size: 28px;">' + icon + '</span>' +
+                                        '<div style="flex: 1;">' +
+                                        '<strong style="font-size: 18px; display: block; margin-bottom: 5px;">' + title + '</strong>' +
+                                        '<span style="font-size: 16px;">' + message + '</span>' +
+                                        '</div>' +
+                                        '<button type="button" id="' + closeBtnId + '" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.6; padding: 0; width: 30px; height: 30px; line-height: 30px; color: inherit;">&times;</button>' +
+                                        '</div>';
+                                    
+                                    // Add close button handler
+                                    var closeBtn = document.getElementById(closeBtnId);
+                                    if (closeBtn) {
+                                        closeBtn.onclick = function() {
+                                            resultsDiv.style.display = 'none';
+                                        };
+                                    }
+                                    
+                                    // Scroll to notification
+                                    setTimeout(function() {
+                                        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    }, 100);
+                                    
+                                    // Auto-hide after 10 seconds (only for success)
+                                    if (isSuccess) {
+                                        setTimeout(function() {
+                                            resultsDiv.style.display = 'none';
+                                        }, 10000);
+                                        
+                                        // Browser notification
+                                        if ('Notification' in window && Notification.permission === 'granted') {
+                                            new Notification('✅ Email Sent Successfully!', {
+                                                body: message,
+                                                icon: 'images/favicon.png'
+                                            });
+                                        }
+                                    }
+                                }
+                                
+                                // Disable all jQuery handlers
+                                if (typeof jQuery !== 'undefined') {
+                                    jQuery(form).off('submit');
+                                }
+                                
+                                // Add pure JS submit handler
+                                form.addEventListener('submit', function(e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    e.stopImmediatePropagation();
+                                    
+                                    // Disable button
+                                    submitBtn.disabled = true;
+                                    submitBtn.textContent = 'SENDING...';
+                                    submitBtn.style.opacity = '0.7';
+                                    
+                                    // Hide previous results
+                                    resultsDiv.style.display = 'none';
+                                    
+                                    // Get form data
+                                    var formData = new FormData(form);
+                                    
+                                    // Send request
+                                    fetch('send-email-hostinger.php', {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(function(response) {
+                                        if (!response.ok) {
+                                            throw new Error('Network response was not ok');
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(function(data) {
+                                        // Reset button
+                                        submitBtn.disabled = false;
+                                        submitBtn.textContent = 'SUBMIT';
+                                        submitBtn.style.opacity = '1';
+                                        
+                                        // Show notification
+                                        if (data.alert === 'alert-success') {
+                                            console.log('success');
+                                            showNotification(data.message, true);
+                                            form.reset();
+                                        } else {
+                                            console.log('error:', data.message);
+                                            showNotification(data.message, false);
+                                        }
+                                    })
+                                    .catch(function(error) {
+                                        console.error('Error:', error);
+                                        
+                                        // Reset button
+                                        submitBtn.disabled = false;
+                                        submitBtn.textContent = 'SUBMIT';
+                                        submitBtn.style.opacity = '1';
+                                        
+                                        // Show error
+                                        showNotification('An error occurred. Please try again.', false);
+                                    });
+                                    
+                                    return false;
+                                }, true); // Use capture phase to run before jQuery
+                            }
+                            
+                            // Start initialization
+                            if (document.readyState === 'loading') {
+                                document.addEventListener('DOMContentLoaded', initForm);
+                            } else {
+                                initForm();
+                            }
+                        })();
+                    </script>
+                </div>
+                <!-- Contact info for desktop (hidden on mobile) -->
+                <div
+                    class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-lg-start align-items-center text-white contact-info">
+                    <div class="contact-info-title fw-400 d-flex text-lg-start text-center text-uppercase lh-1">register your<br>interest now</div>
+                    <div class="contact-info-sub d-flex text-lg-start text-center">
+                        <!-- Have a question<br>or want to get
+                        involved? -->
+                    </div>
+                    <div class="contact-info-list w-100">
+                        <div class="info-item"><i class="text-white-50 bi bi-geo-alt"></i> Yas Marina, Yas Island. Abu
+                            Dhabi, UAE</div>
+                        <div class="info-item"><i class="text-white-50 bi bi-envelope"></i> P.O. Box 144306</div>
+                        <div class="info-item"><i class="text-white-50 bi bi-envelope"></i> samer.eladem@yasmarina.ae
+                        </div>
+                    </div>
+                </div>
             </div>
-      
-            <!-- النموذج -->
-            <div class="col-lg-6 mb-lg-0 d-flex justify-content-center">
-              <form id="yacht-form" class="bg-white p-40px rounded-3 shadow-sm w-100"
-                    style="max-width:400px" action="send-email-hostinger.php" method="POST">
-      
-                <div class="mb-3">
-                  <label class="form-label">Name of Yacht</label>
-                  <input type="text" class="form-control" name="yachtName" required>
-                </div>
-      
-                <div class="mb-3">
-                  <label class="form-label">LOA (meters)</label>
-                  <input type="number" step="0.01" class="form-control" name="loaMeters" required>
-                </div>
-      
-                <div class="mb-3">
-                  <label class="form-label">Name of Owner</label>
-                  <input type="text" class="form-control" name="ownerName" required>
-                </div>
-      
-                <div class="mb-3">
-                  <label class="form-label">Mobile Number</label>
-                  <input type="tel" class="form-control" name="mobileNumber" required>
-                </div>
-      
-                <div class="mb-3">
-                  <label class="form-label">Email Address</label>
-                  <input type="email" class="form-control" name="contactEmail" required>
-                </div>
-      
-                <div class="mb-3 form-text">
-                  By submitting this form, I agree to the
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#Privacy_Policy">Privacy Policy</a>.
-                </div>
-      
-                <button type="submit" class="btn btn-submit w-100 bg-dark-gray fw-100">SUBMIT</button>
-                <div id="form-results" class="mt-3 d-none"></div>
-              </form>
-            </div>
-      
-            <!-- معلومات الاتصال (ديسكتوب فقط) -->
-            <div class="col-lg-6 d-none d-lg-flex flex-column text-white">
-              <div class="contact-info-title fw-400 text-uppercase lh-1 mb-3">
-                register your<br>interest now
-              </div>
-              <div class="contact-info-list">
-                <div class="info-item"><i class="text-white-50 bi bi-geo-alt me-2"></i>Yas Marina, Yas Island. Abu Dhabi, UAE</div>
-                <div class="info-item"><i class="text-white-50 bi bi-envelope me-2"></i>P.O. Box 144306</div>
-                <div class="info-item"><i class="text-white-50 bi bi-envelope me-2"></i>samer.eladem@yasmarina.ae</div>
-              </div>
-            </div>
-      
-          </div>
         </div>
-      </section>
+    </section>
     <!-- end contact section -->
 
     <style>
@@ -805,42 +960,12 @@
         });
     </script>
 
-<script>
-    /* نموذج Yas Rendezvous – إرسال بـ fetch */
-    document.addEventListener('DOMContentLoaded', () => {
-      const form   = document.getElementById('yacht-form');
-      const result = document.getElementById('form-results');
-    
-      form?.addEventListener('submit', e => {
-        e.preventDefault();
-        result.style.display = 'none';
-    
-        fetch('send-email-hostinger.php', {
-          method: 'POST',
-          body: new FormData(form)
-        })
-        .then(r => r.json())
-        .then(data => {
-          result.className = 'mt-3 alert ' + data.alert;
-          result.textContent = data.message;
-          result.style.display = 'block';
-          result.scrollIntoView({behavior:'smooth', block:'center'});
-    
-          if (data.alert === 'alert-success') form.reset();
-        })
-        .catch(err => {
-          result.className = 'mt-3 alert alert-danger';
-          result.textContent = 'An error occurred. Please try again.';
-          result.style.display = 'block';
-        });
-      });
-    });
+    <script>
+        // No JavaScript needed - CSS handles the height with calc(100% - 110px)
+        // The divider will automatically adjust to body height changes
     </script>
 
-<style>
-    .alert-success{background:#d1e7dd;color:#0f5132;border:1px solid #badbcc;padding:15px;border-radius:6px}
-    .alert-danger{background:#f8d7da;color:#842029;border:1px solid #f5c2c7;padding:15px;border-radius:6px}
-    </style>
+
 
     <div class="modal fade" id="Privacy_Policy" tabindex="-1" aria-labelledby="Privacy_Policy" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
