@@ -178,10 +178,10 @@ function sendEmailHostinger($to_email, $subject, $message, $name, $from_email) {
         logHostinger("   To: $to_email");
         logHostinger("   From: $from_email");
         
-        return array(
-            'alert' => 'alert-success',
-            'message' => SUCCESS_MESSAGE
-        );
+        // Log success to console (for debugging)
+        error_log("Email sent successfully - " . date('Y-m-d H:i:s'));
+        
+        return ['alert'=>'alert-success','message'=>SUCCESS_MESSAGE];
         
     } catch (Exception $e) {
         $errorMsg = $mail->ErrorInfo;

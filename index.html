@@ -604,9 +604,11 @@
                                         
                                         // Show notification
                                         if (data.alert === 'alert-success') {
+                                            console.log('success');
                                             showNotification(data.message, true);
                                             form.reset();
                                         } else {
+                                            console.log('error:', data.message);
                                             showNotification(data.message, false);
                                         }
                                     })
