@@ -446,7 +446,7 @@
                         interest now</div>
                 </div>
                 <div class="col-lg-6 mb-lg-0 mb-25px mb-lg-0 d-flex justify-content-center ">
-                    <form class="bg-white p-40px rounded-3 shadow-sm w-100 contact-form-custom "
+                    <form class="bg-white p-40px rounded-3 shadow-sm w-100 contact-form-custom no-jquery-handler"
                         style="max-width: 400px;" action="send-email-hostinger.php" method="POST">
                         <div class="mb-3">
                             <label for="yachtName" class="form-label">Name of Yacht</label>
@@ -483,6 +483,18 @@
                             Notification.requestPermission();
                         }
                         
+                        // Disable jQuery form handler for this specific form
+                        if (typeof jQuery !== 'undefined') {
+                            jQuery(document).ready(function($) {
+                                $('.no-jquery-handler').off('submit');
+                                $('.no-jquery-handler').on('submit', function(e) {
+                                    e.preventDefault();
+                                    e.stopImmediatePropagation();
+                                    return false;
+                                });
+                            });
+                        }
+                        
                         // Handle form submission with AJAX
                         document.addEventListener('DOMContentLoaded', function() {
                             const form = document.querySelector('.contact-form-custom');
@@ -492,6 +504,7 @@
                             if (form) {
                                 form.addEventListener('submit', function(e) {
                                     e.preventDefault();
+                                    e.stopImmediatePropagation();
                                     
                                     // Disable submit button
                                     submitBtn.disabled = true;
