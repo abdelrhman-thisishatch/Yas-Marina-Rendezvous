@@ -181,7 +181,7 @@ function sendEmailHostinger($to_email, $subject, $message, $name, $from_email) {
         // Log success to console (for debugging)
         error_log("Email sent successfully - " . date('Y-m-d H:i:s'));
         
-        return json_encode(['data'=>['alert' => 'alert-success', 'message' => SUCCESS_MESSAGE]]);
+        return json_encode(['alert' => 'alert-success', 'message' => SUCCESS_MESSAGE]);
 
         
     } catch (Exception $e) {
