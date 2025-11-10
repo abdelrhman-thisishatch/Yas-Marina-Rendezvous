@@ -102,6 +102,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 /**
+ * Helper function to read line from SMTP connection
+ */
+if (!function_exists('readSmtpLine')) {
+    function readSmtpLine($fp) {
+        $line = fgets($fp, 512);
+        logNative("SERVER: " . trim($line));
+        return $line;
+    }
+}
+
+/**
+ * Helper function to write command to SMTP connection
+ */
+if (!function_exists('writeSmtpLine')) {
+    function writeSmtpLine($fp, $cmd) {
+        fwrite($fp, $cmd . "\r\n");
+        logNative("CLIENT: " . trim($cmd));
+        $response = readSmtpLine($fp);
+        return $response;
+    }
+}
+
+/**
  * Send email using PHP Native SMTP (fsockopen)
  */
 function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body, $replyTo = '', $replyToName = '') {
@@ -145,22 +168,8 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
             );
         }
         
-        // Helper functions
-        function readLine($fp) {
-            $line = fgets($fp, 512);
-            logNative("SERVER: " . trim($line));
-            return $line;
-        }
-        
-        function writeLine($fp, $cmd) {
-            fwrite($fp, $cmd . "\r\n");
-            logNative("CLIENT: " . trim($cmd));
-            $response = readLine($fp);
-            return $response;
-        }
-        
         // Read server greeting
-        $greeting = readLine($fp);
+        $greeting = readSmtpLine($fp);
         if (substr($greeting, 0, 3) != '220') {
             fclose($fp);
             $errorMsg = "Invalid server greeting: " . trim($greeting);
@@ -179,11 +188,11 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         
         // Send EHLO
         $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
-        $ehloResponse = writeLine($fp, "EHLO $serverName");
+        $ehloResponse = writeSmtpLine($fp, "EHLO $serverName");
         
         // For port 587, we need STARTTLS
         if ($port == 587) {
-            $starttlsResponse = writeLine($fp, "STARTTLS");
+            $starttlsResponse = writeSmtpLine($fp, "STARTTLS");
             if (substr($starttlsResponse, 0, 3) != '220') {
                 fclose($fp);
                 $errorMsg = "STARTTLS failed. Server response: " . trim($starttlsResponse);
@@ -218,11 +227,11 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
             }
             
             // Send EHLO again after STARTTLS
-            writeLine($fp, "EHLO $serverName");
+            writeSmtpLine($fp, "EHLO $serverName");
         }
         
         // Authenticate
-        $authResponse = writeLine($fp, "AUTH LOGIN");
+        $authResponse = writeSmtpLine($fp, "AUTH LOGIN");
         if (substr($authResponse, 0, 3) != '334') {
             fclose($fp);
             $errorMsg = "AUTH LOGIN failed. Server response: " . trim($authResponse);
@@ -240,7 +249,7 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         }
         
         // Send username
-        $userResponse = writeLine($fp, base64_encode($user));
+        $userResponse = writeSmtpLine($fp, base64_encode($user));
         if (substr($userResponse, 0, 3) != '334') {
             fclose($fp);
             $errorMsg = "Username rejected. Server response: " . trim($userResponse);
@@ -259,7 +268,7 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         }
         
         // Send password
-        $passResponse = writeLine($fp, base64_encode($pass));
+        $passResponse = writeSmtpLine($fp, base64_encode($pass));
         if (substr($passResponse, 0, 3) != '235') {
             fclose($fp);
             $errorMsg = "Authentication failed. Server response: " . trim($passResponse);
@@ -281,7 +290,7 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         logNative("✅ Authentication successful");
         
         // Send MAIL FROM
-        $mailFromResponse = writeLine($fp, "MAIL FROM:<$from>");
+        $mailFromResponse = writeSmtpLine($fp, "MAIL FROM:<$from>");
         if (substr($mailFromResponse, 0, 3) != '250') {
             fclose($fp);
             $errorMsg = "MAIL FROM failed. Server response: " . trim($mailFromResponse);
@@ -300,7 +309,7 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         }
         
         // Send RCPT TO
-        $rcptResponse = writeLine($fp, "RCPT TO:<$to>");
+        $rcptResponse = writeSmtpLine($fp, "RCPT TO:<$to>");
         if (substr($rcptResponse, 0, 3) != '250') {
             fclose($fp);
             $errorMsg = "RCPT TO failed. Server response: " . trim($rcptResponse);
@@ -319,7 +328,7 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         }
         
         // Send DATA
-        $dataResponse = writeLine($fp, "DATA");
+        $dataResponse = writeSmtpLine($fp, "DATA");
         if (substr($dataResponse, 0, 3) != '354') {
             fclose($fp);
             $errorMsg = "DATA command failed. Server response: " . trim($dataResponse);
@@ -355,7 +364,7 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         fwrite($fp, $emailData);
         logNative("CLIENT: [Email data sent]");
         
-        $dataEndResponse = readLine($fp);
+        $dataEndResponse = readSmtpLine($fp);
         if (substr($dataEndResponse, 0, 3) != '250') {
             fclose($fp);
             $errorMsg = "Email sending failed. Server response: " . trim($dataEndResponse);
@@ -373,7 +382,7 @@ function sendEmailNative($host, $port, $user, $pass, $from, $to, $subject, $body
         }
         
         // Quit
-        writeLine($fp, "QUIT");
+        writeSmtpLine($fp, "QUIT");
         fclose($fp);
         
         logNative("✅ Email sent successfully via Native SMTP");
