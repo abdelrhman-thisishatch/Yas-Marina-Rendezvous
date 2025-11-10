@@ -478,6 +478,11 @@
                     </form>
                     
                     <script>
+                        // Request notification permission on page load
+                        if ('Notification' in window && Notification.permission === 'default') {
+                            Notification.requestPermission();
+                        }
+                        
                         // Handle form submission with AJAX
                         document.addEventListener('DOMContentLoaded', function() {
                             const form = document.querySelector('.contact-form-custom');
@@ -491,6 +496,7 @@
                                     // Disable submit button
                                     submitBtn.disabled = true;
                                     submitBtn.textContent = 'SENDING...';
+                                    submitBtn.style.opacity = '0.7';
                                     
                                     // Hide previous results
                                     resultsDiv.classList.add('d-none');
@@ -505,22 +511,49 @@
                                     })
                                     .then(response => response.json())
                                     .then(data => {
-                                        // Show results
-                                        resultsDiv.className = 'form-results mt-3 alert ' + data.alert;
-                                        resultsDiv.textContent = data.message;
-                                        resultsDiv.classList.remove('d-none');
-                                        
                                         // Reset button
                                         submitBtn.disabled = false;
                                         submitBtn.textContent = 'SUBMIT';
                                         
-                                        // Reset form if success
+                                        // Show success notification
                                         if (data.alert === 'alert-success') {
+                                            // Show success message with icon and styling
+                                            resultsDiv.className = 'form-results mt-3 alert alert-success alert-dismissible fade show';
+                                            resultsDiv.style.cssText = 'background-color: #d1e7dd; border-color: #badbcc; color: #0f5132; padding: 15px; border-radius: 5px; font-weight: 500;';
+                                            resultsDiv.innerHTML = '<span style="font-size: 20px; margin-right: 8px;">✅</span><strong style="font-size: 16px;">Success!</strong> ' + data.message + '<button type="button" class="btn-close" onclick="this.parentElement.classList.add(\'d-none\')" aria-label="Close" style="float: right; opacity: 0.5;"></button>';
+                                            resultsDiv.classList.remove('d-none');
+                                            
+                                            // Reset form
                                             form.reset();
-                                            // Hide success message after 5 seconds
+                                            
+                                            // Scroll to success message smoothly
+                                            setTimeout(function() {
+                                                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                            }, 100);
+                                            
+                                            // Hide success message after 8 seconds
                                             setTimeout(function() {
                                                 resultsDiv.classList.add('d-none');
-                                            }, 5000);
+                                            }, 8000);
+                                            
+                                            // Show browser notification if supported
+                                            if ('Notification' in window && Notification.permission === 'granted') {
+                                                new Notification('✅ Email Sent Successfully!', {
+                                                    body: data.message,
+                                                    icon: 'images/favicon.png'
+                                                });
+                                            }
+                                        } else {
+                                            // Show error message
+                                            resultsDiv.className = 'form-results mt-3 alert alert-danger alert-dismissible fade show';
+                                            resultsDiv.style.cssText = 'background-color: #f8d7da; border-color: #f5c2c7; color: #842029; padding: 15px; border-radius: 5px; font-weight: 500;';
+                                            resultsDiv.innerHTML = '<span style="font-size: 20px; margin-right: 8px;">❌</span><strong style="font-size: 16px;">Error!</strong> ' + data.message + '<button type="button" class="btn-close" onclick="this.parentElement.classList.add(\'d-none\')" aria-label="Close" style="float: right; opacity: 0.5;"></button>';
+                                            resultsDiv.classList.remove('d-none');
+                                            
+                                            // Scroll to error message smoothly
+                                            setTimeout(function() {
+                                                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                            }, 100);
                                         }
                                     })
                                     .catch(error => {
@@ -532,6 +565,10 @@
                                         // Reset button
                                         submitBtn.disabled = false;
                                         submitBtn.textContent = 'SUBMIT';
+                                        submitBtn.style.opacity = '1';
+                                        
+                                        // Scroll to error message
+                                        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                                         
                                         console.error('Error:', error);
                                     });
