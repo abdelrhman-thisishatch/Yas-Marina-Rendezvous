@@ -446,7 +446,7 @@
                         interest now</div>
                 </div>
                 <div class="col-lg-6 mb-lg-0 mb-25px mb-lg-0 d-flex justify-content-center ">
-                    <form id="contact-form" class="bg-white p-40px rounded-3 shadow-sm w-100 yacht-form contact-form-custom"
+                    <form id="yacht-form" class="bg-white p-40px rounded-3 shadow-sm w-100 yacht-form contact-form-custom"
                         style="max-width: 400px;" action="send-email-hostinger.php" method="POST">
                         <div class="mb-3">
                             <label for="yachtName" class="form-label">Name of Yacht</label>
@@ -480,7 +480,7 @@
                     <script>
                         $(function() {
                             // Get the form
-                            var form = $('#contact-form');
+                            var form = $('#yacht-form');
                             
                             // Get the messages div
                             var formMessages = $('.ajax-response');
@@ -527,7 +527,7 @@
                                             console.log('success');
                                             
                                             // Clear the form
-                                            $('#contact-form input, #contact-form textarea').val('');
+                                            $('#yacht-form input, #yacht-form textarea').val('');
                                             
                                             // Auto-hide after 10 seconds
                                             setTimeout(function() {
@@ -553,7 +553,7 @@
                                         formMessages.removeClass('error alert-danger');
                                         formMessages.addClass('success alert-success');
                                         formMessages.text(response);
-                                        $('#contact-form input, #contact-form textarea').val('');
+                                        $('#yacht-form input, #yacht-form textarea').val('');
                                     }
                                     
                                     // Show the message
