@@ -597,15 +597,16 @@
                                         return response.json();
                                     })
                                     .then(function(data) {
+                                        console.log(data);
                                         // Reset button
-                                        submitBtn.disabled = true;
+                                        submitBtn.disabled = false;
                                         submitBtn.textContent = 'SUBMIT';
                                         submitBtn.style.opacity = '1';
                                         
-                                        showNotification(data.message, true);
-                                        form.reset();
                                         // Show notification
                                         if (data.alert === 'alert-success') {
+                                            showNotification(data.message, true);
+                                            form.reset();
                                             console.log('success');
                                         } else {
                                             console.log('error:', data.message);
