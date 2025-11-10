@@ -239,8 +239,15 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
         } else {
             // Traditional Username/Password Authentication
             logEvent("📧 Using SMTP authentication with Hostinger");
+            logEvent("📧 SMTP Host: " . SMTP_HOST . " Port: " . SMTP_PORT . " Secure: " . $mail->SMTPSecure);
+            logEvent("📧 Username: " . SMTP_USERNAME);
             $mail->Username = SMTP_USERNAME;
             $mail->Password = SMTP_PASSWORD;
+            
+            // Ensure username is full email address (not just local part)
+            if (strpos($mail->Username, '@') === false) {
+                logEvent("⚠️ Warning: Username should be full email address");
+            }
         }
         
         // Additional SMTP options for SSL/TLS connections

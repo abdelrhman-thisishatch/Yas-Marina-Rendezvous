@@ -10,10 +10,10 @@ define('EMAIL_SUBJECT', 'New Yacht Registration - Yas Marina Rendezvous');
 
 // SMTP Settings - Hostinger
 define('SMTP_HOST', 'smtp.hostinger.com');
-define('SMTP_PORT', 465);
-define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Email account
+define('SMTP_PORT', 587); // Try port 587 with TLS (more compatible)
+define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Email account (full email address)
 define('SMTP_PASSWORD', 'M[1t~/zhgkl'); // Email password
-define('SMTP_SECURE', 'ssl'); // SSL for port 465
+define('SMTP_SECURE', 'tls'); // TLS for port 587
 define('SMTP_AUTH', true); // Required for Hostinger
 
 // OAuth2 Settings for Microsoft 365 (Recommended - replaces App Password)
