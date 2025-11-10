@@ -181,7 +181,10 @@ function sendEmailHostinger($to_email, $subject, $message, $name, $from_email) {
         // Log success to console (for debugging)
         error_log("Email sent successfully - " . date('Y-m-d H:i:s'));
         
-        echo json_encode(['alert' => 'alert-success', 'message' => 'Thank you! Your registration has been submitted successfully.']);
+        return array(
+            'alert' => 'alert-success',
+            'message' => SUCCESS_MESSAGE
+        );
 
         
     } catch (Exception $e) {
