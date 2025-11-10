@@ -3,7 +3,7 @@
 // You can modify these values according to your needs
 
 // Recipient Email
-define('RECIPIENT_EMAIL', 'abdelrhman.hassan510@gmail.com');
+define('RECIPIENT_EMAIL', 'abdelrhman@thisishatch.com');
 
 // Email Subject
 define('EMAIL_SUBJECT', 'New Yacht Registration - Yas Marina Rendezvous');
