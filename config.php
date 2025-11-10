@@ -27,7 +27,7 @@ define('OAUTH_USER_EMAIL', 'no-reply@yasmarina.ae'); // Email address for OAuth2
 
 // Site Settings
 define('SITE_NAME', 'Yas Marina Rendezvous');
-define('SITE_URL', 'https://hatchtestserver.com/Yas-Marina-Rendezvous');
+define('SITE_URL', 'https://yasrendezvous.ae');
 
 // Success and Error Messages (English)
 define('SUCCESS_MESSAGE', 'Your message has been sent successfully! We will contact you soon.');

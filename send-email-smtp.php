@@ -17,7 +17,12 @@ session_start();
 function logEvent($message) {
     if (defined('LOG_EMAILS') && LOG_EMAILS) {
         $logEntry = date('Y-m-d H:i:s') . ' - ' . $message . "\n";
-        @file_put_contents(LOG_FILE, $logEntry, FILE_APPEND | LOCK_EX);
+        $logFile = defined('LOG_FILE') ? LOG_FILE : 'email_log.txt';
+        $result = @file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+        if ($result === false) {
+            // Log to error log if file write fails
+            error_log("Failed to write to log file: $logFile - Message: $message");
+        }
     }
 }
 
@@ -155,9 +160,17 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
         $mail->SMTPAuth = true;
-        $mail->SMTPSecure = SMTP_SECURE;
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
+        
+        // Set encryption based on port
+        if (SMTP_PORT == 465) {
+            $mail->SMTPSecure = 'ssl'; // SSL for port 465
+        } elseif (SMTP_PORT == 587) {
+            $mail->SMTPSecure = 'tls'; // TLS for port 587
+        } else {
+            $mail->SMTPSecure = SMTP_SECURE; // Use config value
+        }
         
         // Check if OAuth2 is enabled
         $useOAuth2 = defined('USE_OAUTH2') && USE_OAUTH2 === true;
@@ -224,8 +237,8 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
             $mail->Password = ''; // Not used with OAuth2
             
         } else {
-            // Traditional Username/Password Authentication (Deprecated)
-            logEvent("⚠️ Using password authentication (deprecated for Microsoft 365)");
+            // Traditional Username/Password Authentication
+            logEvent("📧 Using SMTP authentication with Hostinger");
             $mail->Username = SMTP_USERNAME;
             $mail->Password = SMTP_PASSWORD;
         }
@@ -242,10 +255,7 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
         // Hostinger specific settings
         if (strpos(SMTP_HOST, 'hostinger.com') !== false) {
             $mail->Timeout = 30;
-            // Port 465 uses SSL directly (SMTPS)
-            if (SMTP_PORT == 465) {
-                $mail->SMTPSecure = 'ssl';
-            }
+            logEvent("🔧 Hostinger SMTP settings applied");
         }
         
         // Office 365 specific settings (if using OAuth2)
@@ -277,11 +287,22 @@ function sendWithPHPMailer($to_email, $subject, $message, $name, $from_email) {
         
     } catch (Exception $e) {
         $errorMsg = $mail->ErrorInfo;
+        $exceptionMsg = $e->getMessage();
+        
+        // Log detailed error information
         logEvent("❌ PHPMailer Error: " . $errorMsg);
+        logEvent("❌ Exception: " . $exceptionMsg);
+        logEvent("❌ SMTP Host: " . SMTP_HOST . " Port: " . SMTP_PORT . " Secure: " . $mail->SMTPSecure);
+        
+        // Return error with more details if DEBUG_MODE is enabled
+        $errorMessage = ERROR_MESSAGE;
+        if (defined('DEBUG_MODE') && DEBUG_MODE) {
+            $errorMessage .= " (Debug: " . htmlspecialchars($errorMsg) . ")";
+        }
         
         return array(
             'alert' => 'alert-danger',
-            'message' => ERROR_MESSAGE
+            'message' => $errorMessage
         );
     }
 }
