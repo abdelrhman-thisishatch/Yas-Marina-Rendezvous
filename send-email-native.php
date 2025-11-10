@@ -20,6 +20,29 @@ function logNative($message) {
     @file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
 }
 
+/**
+ * Helper function to read line from SMTP connection
+ */
+if (!function_exists('readSmtpLine')) {
+    function readSmtpLine($fp) {
+        $line = fgets($fp, 512);
+        logNative("SERVER: " . trim($line));
+        return $line;
+    }
+}
+
+/**
+ * Helper function to write command to SMTP connection
+ */
+if (!function_exists('writeSmtpLine')) {
+    function writeSmtpLine($fp, $cmd) {
+        fwrite($fp, $cmd . "\r\n");
+        logNative("CLIENT: " . trim($cmd));
+        $response = readSmtpLine($fp);
+        return $response;
+    }
+}
+
 // Main processing
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
@@ -99,29 +122,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'message' => 'Invalid request method.'
     ]);
     logNative("Invalid request method from IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
-}
-
-/**
- * Helper function to read line from SMTP connection
- */
-if (!function_exists('readSmtpLine')) {
-    function readSmtpLine($fp) {
-        $line = fgets($fp, 512);
-        logNative("SERVER: " . trim($line));
-        return $line;
-    }
-}
-
-/**
- * Helper function to write command to SMTP connection
- */
-if (!function_exists('writeSmtpLine')) {
-    function writeSmtpLine($fp, $cmd) {
-        fwrite($fp, $cmd . "\r\n");
-        logNative("CLIENT: " . trim($cmd));
-        $response = readSmtpLine($fp);
-        return $response;
-    }
 }
 
 /**
