@@ -509,32 +509,44 @@
                                         method: 'POST',
                                         body: formData
                                     })
-                                    .then(response => response.json())
+                                    .then(response => {
+                                        console.log('Response status:', response.status);
+                                        return response.json();
+                                    })
                                     .then(data => {
+                                        console.log('Response data:', data);
+                                        
                                         // Reset button
                                         submitBtn.disabled = false;
                                         submitBtn.textContent = 'SUBMIT';
+                                        submitBtn.style.opacity = '1';
                                         
                                         // Show success notification
                                         if (data.alert === 'alert-success') {
-                                            // Show success message with icon and styling
-                                            resultsDiv.className = 'form-results mt-3 alert alert-success alert-dismissible fade show';
-                                            resultsDiv.style.cssText = 'background-color: #d1e7dd; border-color: #badbcc; color: #0f5132; padding: 15px; border-radius: 5px; font-weight: 500;';
-                                            resultsDiv.innerHTML = '<span style="font-size: 20px; margin-right: 8px;">✅</span><strong style="font-size: 16px;">Success!</strong> ' + data.message + '<button type="button" class="btn-close" onclick="this.parentElement.classList.add(\'d-none\')" aria-label="Close" style="float: right; opacity: 0.5;"></button>';
+                                            console.log('Showing success message');
+                                            
+                                            // Remove d-none class first
                                             resultsDiv.classList.remove('d-none');
+                                            
+                                            // Set classes and styles
+                                            resultsDiv.className = 'form-results mt-3';
+                                            resultsDiv.style.cssText = 'display: block !important; visibility: visible !important; background-color: #d1e7dd; border: 2px solid #badbcc; color: #0f5132; padding: 20px; border-radius: 8px; font-weight: 500; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);';
+                                            
+                                            // Set content
+                                            resultsDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 28px;">✅</span><div style="flex: 1;"><strong style="font-size: 18px; display: block; margin-bottom: 5px;">Success!</strong><span style="font-size: 16px;">' + data.message + '</span></div><button type="button" onclick="this.parentElement.parentElement.style.display=\'none\'" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.6; padding: 0; width: 30px; height: 30px; line-height: 30px;">&times;</button></div>';
                                             
                                             // Reset form
                                             form.reset();
                                             
                                             // Scroll to success message smoothly
                                             setTimeout(function() {
-                                                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                                            }, 100);
+                                                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                            }, 200);
                                             
-                                            // Hide success message after 8 seconds
+                                            // Hide success message after 10 seconds
                                             setTimeout(function() {
-                                                resultsDiv.classList.add('d-none');
-                                            }, 8000);
+                                                resultsDiv.style.display = 'none';
+                                            }, 10000);
                                             
                                             // Show browser notification if supported
                                             if ('Notification' in window && Notification.permission === 'granted') {
@@ -544,23 +556,32 @@
                                                 });
                                             }
                                         } else {
-                                            // Show error message
-                                            resultsDiv.className = 'form-results mt-3 alert alert-danger alert-dismissible fade show';
-                                            resultsDiv.style.cssText = 'background-color: #f8d7da; border-color: #f5c2c7; color: #842029; padding: 15px; border-radius: 5px; font-weight: 500;';
-                                            resultsDiv.innerHTML = '<span style="font-size: 20px; margin-right: 8px;">❌</span><strong style="font-size: 16px;">Error!</strong> ' + data.message + '<button type="button" class="btn-close" onclick="this.parentElement.classList.add(\'d-none\')" aria-label="Close" style="float: right; opacity: 0.5;"></button>';
+                                            console.log('Showing error message');
+                                            
+                                            // Remove d-none class first
                                             resultsDiv.classList.remove('d-none');
+                                            
+                                            // Set classes and styles
+                                            resultsDiv.className = 'form-results mt-3';
+                                            resultsDiv.style.cssText = 'display: block !important; visibility: visible !important; background-color: #f8d7da; border: 2px solid #f5c2c7; color: #842029; padding: 20px; border-radius: 8px; font-weight: 500; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);';
+                                            
+                                            // Set content
+                                            resultsDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 28px;">❌</span><div style="flex: 1;"><strong style="font-size: 18px; display: block; margin-bottom: 5px;">Error!</strong><span style="font-size: 16px;">' + data.message + '</span></div><button type="button" onclick="this.parentElement.parentElement.style.display=\'none\'" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.6; padding: 0; width: 30px; height: 30px; line-height: 30px;">&times;</button></div>';
                                             
                                             // Scroll to error message smoothly
                                             setTimeout(function() {
-                                                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                                            }, 100);
+                                                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                            }, 200);
                                         }
                                     })
                                     .catch(error => {
+                                        console.error('Fetch error:', error);
+                                        
                                         // Show error
-                                        resultsDiv.className = 'form-results mt-3 alert alert-danger';
-                                        resultsDiv.textContent = 'An error occurred. Please try again.';
                                         resultsDiv.classList.remove('d-none');
+                                        resultsDiv.className = 'form-results mt-3';
+                                        resultsDiv.style.cssText = 'display: block !important; visibility: visible !important; background-color: #f8d7da; border: 2px solid #f5c2c7; color: #842029; padding: 20px; border-radius: 8px; font-weight: 500; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);';
+                                        resultsDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 28px;">❌</span><div style="flex: 1;"><strong style="font-size: 18px; display: block; margin-bottom: 5px;">Error!</strong><span style="font-size: 16px;">An error occurred. Please try again.</span></div><button type="button" onclick="this.parentElement.parentElement.style.display=\'none\'" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.6; padding: 0; width: 30px; height: 30px; line-height: 30px;">&times;</button></div>';
                                         
                                         // Reset button
                                         submitBtn.disabled = false;
@@ -568,9 +589,9 @@
                                         submitBtn.style.opacity = '1';
                                         
                                         // Scroll to error message
-                                        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                                        
-                                        console.error('Error:', error);
+                                        setTimeout(function() {
+                                            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                        }, 200);
                                     });
                                 });
                             }
