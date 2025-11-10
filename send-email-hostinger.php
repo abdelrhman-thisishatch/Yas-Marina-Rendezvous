@@ -97,10 +97,11 @@ function sendEmailHostinger($to_email, $subject, $message, $name, $from_email) {
     // Check if PHPMailer exists
     if (!file_exists('PHPMailer/PHPMailer.php')) {
         logHostinger("❌ PHPMailer not found");
-        return array(
+        echo json_encode(array(
             'alert' => 'alert-danger',
             'message' => ERROR_MESSAGE . ' (PHPMailer not installed)'
-        );
+        ));
+        exit;
     }
     
     try {
@@ -178,10 +179,10 @@ function sendEmailHostinger($to_email, $subject, $message, $name, $from_email) {
         logHostinger("   To: $to_email");
         logHostinger("   From: $from_email");
         
-        return array(
+        echo json_encode(array(
             'alert' => 'alert-success',
             'message' => SUCCESS_MESSAGE
-        );
+        ));
         
     } catch (Exception $e) {
         $errorMsg = $mail->ErrorInfo;
@@ -199,10 +200,11 @@ function sendEmailHostinger($to_email, $subject, $message, $name, $from_email) {
             $errorMessage .= " (Debug: " . htmlspecialchars($errorMsg) . ")";
         }
         
-        return array(
+        echo json_encode(array(
             'alert' => 'alert-danger',
             'message' => $errorMessage
-        );
+        ));
+        exit;
     }
 }
 ?>
