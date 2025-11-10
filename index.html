@@ -446,7 +446,7 @@
                         interest now</div>
                 </div>
                 <div class="col-lg-6 mb-lg-0 mb-25px mb-lg-0 d-flex justify-content-center ">
-                    <form id="yacht-form" class="bg-white p-40px rounded-3 shadow-sm w-100 yacht-form contact-form-custom"
+                    <form class="bg-white p-40px rounded-3 shadow-sm w-100 yacht-form contact-form-custom no-jquery-handler"
                         style="max-width: 400px;" action="send-email-hostinger.php" method="POST">
                         <div class="mb-3">
                             <label for="yachtName" class="form-label">Name of Yacht</label>
@@ -474,9 +474,169 @@
                                 data-bs-whatever="@mdo">Privacy Policy.</a>
                         </div>
                         <button type="submit" class="btn btn-submit w-100 bg-dark-gray fw-100 submit">SUBMIT</button>
-                        <div class="ajax-response mt-3 d-none"></div>
+                        <div class="form-results mt-3 d-none"></div>
                     </form>
-              
+                    
+                    <script>
+                        // Pure JavaScript - No jQuery dependencies
+                        (function() {
+                            'use strict';
+                            
+                            // Request notification permission
+                            if ('Notification' in window && Notification.permission === 'default') {
+                                Notification.requestPermission();
+                            }
+                            
+                            // Wait for DOM to be ready
+                            function initForm() {
+                                var form = document.querySelector('.contact-form-custom');
+                                if (!form) {
+                                    setTimeout(initForm, 100);
+                                    return;
+                                }
+                                
+                                var resultsDiv = form.querySelector('.form-results');
+                                var submitBtn = form.querySelector('.submit');
+                                
+                                if (!resultsDiv || !submitBtn) return;
+                                
+                                // Function to show notification
+                                function showNotification(message, isSuccess) {
+                                    // Remove any existing classes
+                                    resultsDiv.className = 'form-results mt-3';
+                                    
+                                    // Set styles directly
+                                    resultsDiv.style.display = 'block';
+                                    resultsDiv.style.visibility = 'visible';
+                                    resultsDiv.style.backgroundColor = isSuccess ? '#d1e7dd' : '#f8d7da';
+                                    resultsDiv.style.border = '2px solid ' + (isSuccess ? '#badbcc' : '#f5c2c7');
+                                    resultsDiv.style.color = isSuccess ? '#0f5132' : '#842029';
+                                    resultsDiv.style.padding = '20px';
+                                    resultsDiv.style.borderRadius = '8px';
+                                    resultsDiv.style.fontWeight = '500';
+                                    resultsDiv.style.marginTop = '20px';
+                                    resultsDiv.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                                    resultsDiv.style.zIndex = '9999';
+                                    resultsDiv.style.position = 'relative';
+                                    
+                                    // Create close button handler
+                                    var closeBtnId = 'close-btn-' + Date.now();
+                                    
+                                    // Set HTML content
+                                    var icon = isSuccess ? '✅' : '❌';
+                                    var title = isSuccess ? 'Success!' : 'Error!';
+                                    resultsDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;">' +
+                                        '<span style="font-size: 28px;">' + icon + '</span>' +
+                                        '<div style="flex: 1;">' +
+                                        '<strong style="font-size: 18px; display: block; margin-bottom: 5px;">' + title + '</strong>' +
+                                        '<span style="font-size: 16px;">' + message + '</span>' +
+                                        '</div>' +
+                                        '<button type="button" id="' + closeBtnId + '" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.6; padding: 0; width: 30px; height: 30px; line-height: 30px; color: inherit;">&times;</button>' +
+                                        '</div>';
+                                    
+                                    // Add close button handler
+                                    var closeBtn = document.getElementById(closeBtnId);
+                                    if (closeBtn) {
+                                        closeBtn.onclick = function() {
+                                            resultsDiv.style.display = 'none';
+                                        };
+                                    }
+                                    
+                                    // Scroll to notification
+                                    setTimeout(function() {
+                                        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    }, 100);
+                                    
+                                    // Auto-hide after 10 seconds (only for success)
+                                    if (isSuccess) {
+                                        setTimeout(function() {
+                                            resultsDiv.style.display = 'none';
+                                        }, 10000);
+                                        
+                                        // Browser notification
+                                        if ('Notification' in window && Notification.permission === 'granted') {
+                                            new Notification('✅ Email Sent Successfully!', {
+                                                body: message,
+                                                icon: 'images/favicon.png'
+                                            });
+                                        }
+                                    }
+                                }
+                                
+                                // Disable all jQuery handlers
+                                if (typeof jQuery !== 'undefined') {
+                                    jQuery(form).off('submit');
+                                }
+                                
+                                // Add pure JS submit handler
+                                form.addEventListener('submit', function(e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    e.stopImmediatePropagation();
+                                    
+                                    // Disable button
+                                    submitBtn.disabled = true;
+                                    submitBtn.textContent = 'SENDING...';
+                                    submitBtn.style.opacity = '0.7';
+                                    
+                                    // Hide previous results
+                                    resultsDiv.style.display = 'none';
+                                    
+                                    // Get form data
+                                    var formData = new FormData(form);
+                                    
+                                    // Send request
+                                    fetch('send-email-hostinger.php', {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(function(response) {
+                                        if (!response.ok) {
+                                            throw new Error('Network response was not ok');
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(function(data) {
+                                        // Reset button
+                                        submitBtn.disabled = true;
+                                        submitBtn.textContent = 'SUBMIT';
+                                        submitBtn.style.opacity = '1';
+                                        
+                                        showNotification(data.message, true);
+                                        form.reset();
+                                        // Show notification
+                                        if (data.alert === 'alert-success') {
+                                            console.log('success');
+                                        } else {
+                                            console.log('error:', data.message);
+                                            showNotification(data.message, false);
+                                        }
+                                    })
+                                    .catch(function(error) {
+                                        console.error('Error:', error);
+                                        
+                                        // Reset button
+                                        submitBtn.disabled = false;
+                                        submitBtn.textContent = 'SUBMIT';
+                                        submitBtn.style.opacity = '1';
+                                        
+                                        // Show error
+                                        showNotification('An error occurred. Please try again.', false);
+                                    });
+                                    
+                                    return false;
+                                }, true); // Use capture phase to run before jQuery
+                            }
+                            
+                            // Start initialization
+                            if (document.readyState === 'loading') {
+                                document.addEventListener('DOMContentLoaded', initForm);
+                            } else {
+                                initForm();
+                            }
+                        })();
+                    </script>
+                </div>
                 <!-- Contact info for desktop (hidden on mobile) -->
                 <div
                     class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-lg-start align-items-center text-white contact-info">
@@ -909,161 +1069,6 @@
     </div>
 
 
-
-
-          
-    <script>
-        $(function() {
-            // Get the form
-            var form = $('#yacht-form');
-            
-            // Get the messages div
-            var formMessages = $('.ajax-response');
-            
-            // Get submit button
-            var submitBtn = form.find('.submit');
-            
-            // Set up an event listener for the contact form
-            $(form).submit(function(e) {
-                // Stop the browser from submitting the form
-                e.preventDefault();
-                
-                // Disable submit button
-                submitBtn.prop('disabled', true);
-                submitBtn.text('SENDING...');
-                submitBtn.css('opacity', '0.7');
-                
-                // Hide previous messages
-                formMessages.removeClass('d-none success error alert-success alert-danger').hide();
-                
-                // Serialize the form data
-                var formData = $(form).serialize();
-                
-                // Submit the form using AJAX
-                $.ajax({
-                    type: 'POST',
-                    url: $(form).attr('action'),
-                    data: formData,
-                    dataType: 'json'
-                })
-                .done(function(response) {
-                    // Reset button
-                    submitBtn.prop('disabled', false);
-                    submitBtn.text('SUBMIT');
-                    submitBtn.css('opacity', '1');
-                    
-                    // Check if response is JSON object
-                    if (typeof response === 'object' && response.alert) {
-                        // Make sure that the formMessages div has the correct class
-                        formMessages.removeClass('error success alert-danger alert-success');
-                        
-                        if (response.alert === 'alert-success') {
-                            formMessages.addClass('success alert-success');
-                            console.log('success');
-                            
-                            // Clear the form
-                            $('#yacht-form input, #yacht-form textarea').val('');
-                            
-                            // Auto-hide after 10 seconds
-                            setTimeout(function() {
-                                formMessages.fadeOut('slow');
-                            }, 10000);
-                        } else {
-                            formMessages.addClass('error alert-danger');
-                        }
-                        
-                        // Set the message text with icon
-                        var icon = response.alert === 'alert-success' ? '✅' : '❌';
-                        var title = response.alert === 'alert-success' ? 'Success!' : 'Error!';
-                        formMessages.html('<div style="display: flex; align-items: center; gap: 10px;">' +
-                            '<span style="font-size: 28px;">' + icon + '</span>' +
-                            '<div style="flex: 1;">' +
-                            '<strong style="font-size: 18px; display: block; margin-bottom: 5px;">' + title + '</strong>' +
-                            '<span style="font-size: 16px;">' + response.message + '</span>' +
-                            '</div>' +
-                            '<button type="button" onclick="jQuery(this).closest(\'.ajax-response\').fadeOut()" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.6; padding: 0; width: 30px; height: 30px; line-height: 30px;">&times;</button>' +
-                            '</div>');
-                    } else {
-                        // Handle plain text response
-                        formMessages.removeClass('error alert-danger');
-                        formMessages.addClass('success alert-success');
-                        formMessages.text(response);
-                        $('#yacht-form input, #yacht-form textarea').val('');
-                    }
-                    
-                    // Show the message
-                    formMessages.removeClass('d-none').fadeIn('slow');
-                    
-                    // Scroll to message
-                    $('html, body').animate({
-                        scrollTop: formMessages.offset().top - 100
-                    }, 500);
-                })
-                .fail(function(data) {
-                    // Reset button
-                    submitBtn.prop('disabled', false);
-                    submitBtn.text('SUBMIT');
-                    submitBtn.css('opacity', '1');
-                    
-                    // Make sure that the formMessages div has the 'error' class
-                    formMessages.removeClass('success alert-success');
-                    formMessages.addClass('error alert-danger');
-                    
-                    // Set the message text
-                    var errorMessage = 'Oops! An error occurred and your message could not be sent.';
-                    if (data.responseText !== '' && data.responseText) {
-                        try {
-                            var errorData = JSON.parse(data.responseText);
-                            if (errorData.message) {
-                                errorMessage = errorData.message;
-                            }
-                        } catch(e) {
-                            errorMessage = data.responseText;
-                        }
-                    }
-                    
-                    formMessages.html('<div style="display: flex; align-items: center; gap: 10px;">' +
-                        '<span style="font-size: 28px;">❌</span>' +
-                        '<div style="flex: 1;">' +
-                        '<strong style="font-size: 18px; display: block; margin-bottom: 5px;">Error!</strong>' +
-                        '<span style="font-size: 16px;">' + errorMessage + '</span>' +
-                        '</div>' +
-                        '<button type="button" onclick="jQuery(this).closest(\'.ajax-response\').fadeOut()" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.6; padding: 0; width: 30px; height: 30px; line-height: 30px;">&times;</button>' +
-                        '</div>');
-                    
-                    // Show the message
-                    formMessages.removeClass('d-none').fadeIn('slow');
-                    
-                    // Scroll to message
-                    $('html, body').animate({
-                        scrollTop: formMessages.offset().top - 100
-                    }, 500);
-                });
-            });
-        });
-    </script>
-    <style>
-        .alert-success {
-            background: #d1e7dd;
-            color: #0f5132;
-            border: 2px solid #badbcc;
-            padding: 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .alert-danger {
-            background: #f8d7da;
-            color: #842029;
-            border: 2px solid #f5c2c7;
-            padding: 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-    </style>
-
-</div>
 
 </body>
 
