@@ -478,137 +478,161 @@
                     </form>
                     
                     <script>
-                        // Request notification permission on page load
-                        if ('Notification' in window && Notification.permission === 'default') {
-                            Notification.requestPermission();
-                        }
-                        
-                        // Disable jQuery form handler for this specific form
-                        if (typeof jQuery !== 'undefined') {
-                            jQuery(document).ready(function($) {
-                                $('.no-jquery-handler').off('submit');
-                                $('.no-jquery-handler').on('submit', function(e) {
-                                    e.preventDefault();
-                                    e.stopImmediatePropagation();
-                                    return false;
-                                });
-                            });
-                        }
-                        
-                        // Handle form submission with AJAX
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const form = document.querySelector('.contact-form-custom');
-                            const resultsDiv = form.querySelector('.form-results');
-                            const submitBtn = form.querySelector('.submit');
+                        // Pure JavaScript - No jQuery dependencies
+                        (function() {
+                            'use strict';
                             
-                            if (form) {
+                            // Request notification permission
+                            if ('Notification' in window && Notification.permission === 'default') {
+                                Notification.requestPermission();
+                            }
+                            
+                            // Wait for DOM to be ready
+                            function initForm() {
+                                var form = document.querySelector('.contact-form-custom');
+                                if (!form) {
+                                    setTimeout(initForm, 100);
+                                    return;
+                                }
+                                
+                                var resultsDiv = form.querySelector('.form-results');
+                                var submitBtn = form.querySelector('.submit');
+                                
+                                if (!resultsDiv || !submitBtn) return;
+                                
+                                // Function to show notification
+                                function showNotification(message, isSuccess) {
+                                    // Remove any existing classes
+                                    resultsDiv.className = 'form-results mt-3';
+                                    
+                                    // Set styles directly
+                                    resultsDiv.style.display = 'block';
+                                    resultsDiv.style.visibility = 'visible';
+                                    resultsDiv.style.backgroundColor = isSuccess ? '#d1e7dd' : '#f8d7da';
+                                    resultsDiv.style.border = '2px solid ' + (isSuccess ? '#badbcc' : '#f5c2c7');
+                                    resultsDiv.style.color = isSuccess ? '#0f5132' : '#842029';
+                                    resultsDiv.style.padding = '20px';
+                                    resultsDiv.style.borderRadius = '8px';
+                                    resultsDiv.style.fontWeight = '500';
+                                    resultsDiv.style.marginTop = '20px';
+                                    resultsDiv.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                                    resultsDiv.style.zIndex = '9999';
+                                    resultsDiv.style.position = 'relative';
+                                    
+                                    // Create close button handler
+                                    var closeBtnId = 'close-btn-' + Date.now();
+                                    
+                                    // Set HTML content
+                                    var icon = isSuccess ? '✅' : '❌';
+                                    var title = isSuccess ? 'Success!' : 'Error!';
+                                    resultsDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;">' +
+                                        '<span style="font-size: 28px;">' + icon + '</span>' +
+                                        '<div style="flex: 1;">' +
+                                        '<strong style="font-size: 18px; display: block; margin-bottom: 5px;">' + title + '</strong>' +
+                                        '<span style="font-size: 16px;">' + message + '</span>' +
+                                        '</div>' +
+                                        '<button type="button" id="' + closeBtnId + '" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.6; padding: 0; width: 30px; height: 30px; line-height: 30px; color: inherit;">&times;</button>' +
+                                        '</div>';
+                                    
+                                    // Add close button handler
+                                    var closeBtn = document.getElementById(closeBtnId);
+                                    if (closeBtn) {
+                                        closeBtn.onclick = function() {
+                                            resultsDiv.style.display = 'none';
+                                        };
+                                    }
+                                    
+                                    // Scroll to notification
+                                    setTimeout(function() {
+                                        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    }, 100);
+                                    
+                                    // Auto-hide after 10 seconds (only for success)
+                                    if (isSuccess) {
+                                        setTimeout(function() {
+                                            resultsDiv.style.display = 'none';
+                                        }, 10000);
+                                        
+                                        // Browser notification
+                                        if ('Notification' in window && Notification.permission === 'granted') {
+                                            new Notification('✅ Email Sent Successfully!', {
+                                                body: message,
+                                                icon: 'images/favicon.png'
+                                            });
+                                        }
+                                    }
+                                }
+                                
+                                // Disable all jQuery handlers
+                                if (typeof jQuery !== 'undefined') {
+                                    jQuery(form).off('submit');
+                                }
+                                
+                                // Add pure JS submit handler
                                 form.addEventListener('submit', function(e) {
                                     e.preventDefault();
+                                    e.stopPropagation();
                                     e.stopImmediatePropagation();
                                     
-                                    // Disable submit button
+                                    // Disable button
                                     submitBtn.disabled = true;
                                     submitBtn.textContent = 'SENDING...';
                                     submitBtn.style.opacity = '0.7';
                                     
                                     // Hide previous results
-                                    resultsDiv.classList.add('d-none');
+                                    resultsDiv.style.display = 'none';
                                     
                                     // Get form data
-                                    const formData = new FormData(form);
+                                    var formData = new FormData(form);
                                     
-                                    // Send AJAX request - Using PHPMailer SMTP
+                                    // Send request
                                     fetch('send-email-hostinger.php', {
                                         method: 'POST',
                                         body: formData
                                     })
-                                    .then(response => {
-                                        console.log('Response status:', response.status);
+                                    .then(function(response) {
+                                        if (!response.ok) {
+                                            throw new Error('Network response was not ok');
+                                        }
                                         return response.json();
                                     })
-                                    .then(data => {
-                                        console.log('Response data:', data);
-                                        
+                                    .then(function(data) {
                                         // Reset button
                                         submitBtn.disabled = false;
                                         submitBtn.textContent = 'SUBMIT';
                                         submitBtn.style.opacity = '1';
                                         
-                                        // Show success notification
+                                        // Show notification
                                         if (data.alert === 'alert-success') {
-                                            console.log('Showing success message');
-                                            
-                                            // Remove d-none class first
-                                            resultsDiv.classList.remove('d-none');
-                                            
-                                            // Set classes and styles
-                                            resultsDiv.className = 'form-results mt-3';
-                                            resultsDiv.style.cssText = 'display: block !important; visibility: visible !important; background-color: #d1e7dd; border: 2px solid #badbcc; color: #0f5132; padding: 20px; border-radius: 8px; font-weight: 500; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);';
-                                            
-                                            // Set content
-                                            resultsDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 28px;">✅</span><div style="flex: 1;"><strong style="font-size: 18px; display: block; margin-bottom: 5px;">Success!</strong><span style="font-size: 16px;">' + data.message + '</span></div><button type="button" onclick="this.parentElement.parentElement.style.display=\'none\'" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.6; padding: 0; width: 30px; height: 30px; line-height: 30px;">&times;</button></div>';
-                                            
-                                            // Reset form
+                                            showNotification(data.message, true);
                                             form.reset();
-                                            
-                                            // Scroll to success message smoothly
-                                            setTimeout(function() {
-                                                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                            }, 200);
-                                            
-                                            // Hide success message after 10 seconds
-                                            setTimeout(function() {
-                                                resultsDiv.style.display = 'none';
-                                            }, 10000);
-                                            
-                                            // Show browser notification if supported
-                                            if ('Notification' in window && Notification.permission === 'granted') {
-                                                new Notification('✅ Email Sent Successfully!', {
-                                                    body: data.message,
-                                                    icon: 'images/favicon.png'
-                                                });
-                                            }
                                         } else {
-                                            console.log('Showing error message');
-                                            
-                                            // Remove d-none class first
-                                            resultsDiv.classList.remove('d-none');
-                                            
-                                            // Set classes and styles
-                                            resultsDiv.className = 'form-results mt-3';
-                                            resultsDiv.style.cssText = 'display: block !important; visibility: visible !important; background-color: #f8d7da; border: 2px solid #f5c2c7; color: #842029; padding: 20px; border-radius: 8px; font-weight: 500; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);';
-                                            
-                                            // Set content
-                                            resultsDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 28px;">❌</span><div style="flex: 1;"><strong style="font-size: 18px; display: block; margin-bottom: 5px;">Error!</strong><span style="font-size: 16px;">' + data.message + '</span></div><button type="button" onclick="this.parentElement.parentElement.style.display=\'none\'" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.6; padding: 0; width: 30px; height: 30px; line-height: 30px;">&times;</button></div>';
-                                            
-                                            // Scroll to error message smoothly
-                                            setTimeout(function() {
-                                                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                            }, 200);
+                                            showNotification(data.message, false);
                                         }
                                     })
-                                    .catch(error => {
-                                        console.error('Fetch error:', error);
-                                        
-                                        // Show error
-                                        resultsDiv.classList.remove('d-none');
-                                        resultsDiv.className = 'form-results mt-3';
-                                        resultsDiv.style.cssText = 'display: block !important; visibility: visible !important; background-color: #f8d7da; border: 2px solid #f5c2c7; color: #842029; padding: 20px; border-radius: 8px; font-weight: 500; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);';
-                                        resultsDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 28px;">❌</span><div style="flex: 1;"><strong style="font-size: 18px; display: block; margin-bottom: 5px;">Error!</strong><span style="font-size: 16px;">An error occurred. Please try again.</span></div><button type="button" onclick="this.parentElement.parentElement.style.display=\'none\'" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.6; padding: 0; width: 30px; height: 30px; line-height: 30px;">&times;</button></div>';
+                                    .catch(function(error) {
+                                        console.error('Error:', error);
                                         
                                         // Reset button
                                         submitBtn.disabled = false;
                                         submitBtn.textContent = 'SUBMIT';
                                         submitBtn.style.opacity = '1';
                                         
-                                        // Scroll to error message
-                                        setTimeout(function() {
-                                            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                        }, 200);
+                                        // Show error
+                                        showNotification('An error occurred. Please try again.', false);
                                     });
-                                });
+                                    
+                                    return false;
+                                }, true); // Use capture phase to run before jQuery
                             }
-                        });
+                            
+                            // Start initialization
+                            if (document.readyState === 'loading') {
+                                document.addEventListener('DOMContentLoaded', initForm);
+                            } else {
+                                initForm();
+                            }
+                        })();
                     </script>
                 </div>
                 <!-- Contact info for desktop (hidden on mobile) -->
