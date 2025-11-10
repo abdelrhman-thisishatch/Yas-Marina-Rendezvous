@@ -13,7 +13,7 @@ define('SMTP_HOST', 'smtp.hostinger.com');
 define('SMTP_PORT', 465); // Port 587 with TLS
 define('SMTP_USERNAME', 'no-reply@yasmarina.ae'); // Full email address
 define('SMTP_PASSWORD', 'M[1t~/zhgkl'); // Email password
-define('SMTP_SECURE', 'SSL'); // TLS encryption
+define('SMTP_SECURE', 'ssl'); // SSL encryption (lowercase required)
 
 // Site Settings
 define('SITE_NAME', 'Yas Marina Rendezvous');

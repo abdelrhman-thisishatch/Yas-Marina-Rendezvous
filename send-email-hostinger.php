@@ -122,20 +122,35 @@ function sendEmailHostinger($to_email, $subject, $message, $name, $from_email) {
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
         $mail->SMTPAuth = true;
-        $mail->Username = SMTP_USERNAME;
-        $mail->Password = SMTP_PASSWORD;
-        $mail->SMTPSecure = SMTP_SECURE;
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
         $mail->Timeout = 30;
+        
+        // Set encryption - ensure lowercase
+        $secure = strtolower(SMTP_SECURE);
+        if ($secure == 'ssl' || $secure == 'tls') {
+            $mail->SMTPSecure = $secure;
+        } else {
+            // Auto-detect based on port
+            if (SMTP_PORT == 465) {
+                $mail->SMTPSecure = 'ssl';
+            } elseif (SMTP_PORT == 587) {
+                $mail->SMTPSecure = 'tls';
+            }
+        }
+        
+        // Set credentials
+        $mail->Username = SMTP_USERNAME;
+        $mail->Password = SMTP_PASSWORD;
         
         // Log configuration
         logHostinger("📧 Hostinger SMTP Configuration:");
         logHostinger("   Host: " . SMTP_HOST);
         logHostinger("   Port: " . SMTP_PORT);
-        logHostinger("   Secure: " . SMTP_SECURE);
+        logHostinger("   Secure: " . $mail->SMTPSecure);
         logHostinger("   Username: " . SMTP_USERNAME);
         logHostinger("   Password Length: " . strlen(SMTP_PASSWORD) . " characters");
+        logHostinger("   Password contains special chars: " . (preg_match('/[^a-zA-Z0-9]/', SMTP_PASSWORD) ? 'Yes' : 'No'));
         
         // SSL/TLS Options
         $mail->SMTPOptions = array(
